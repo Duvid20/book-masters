@@ -1,3 +1,9 @@
+<?php
+session_start();
+require_once 'includes/functions.php';
+require_once 'includes/db.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,15 +14,9 @@
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/nav.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
     <title>Book Masters</title>
 </head>
-
-<?php
-
-require_once 'includes/functions.php';
-require_once 'includes/db.php';
-
-?>
 
 <div id="container">
 

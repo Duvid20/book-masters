@@ -1,0 +1,45 @@
+input {
+  border-radius: 10px;
+  height: 5vh;
+  min-height: 30px;
+  max-height: 40px;
+  width: 100%;
+  max-width: 300px;
+}
+
+input[type="submit"] {
+  background-color: rgb(0, 110, 255);
+  color: white;
+  font-size: large;
+  cursor: pointer;
+  border: 1px solid wheat;
+}
+
+input[type="submit"]:hover {
+  background-color: rgb(74, 129, 218);
+}
+
+.text-input {
+  padding-left: 10px;
+}
+
+.auth-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+
+.account-message {
+  font-size: small;
+  width: 100%;
+  text-align: center;
+  /* white-space: nowrap; */
+}

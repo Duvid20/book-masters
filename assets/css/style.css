@@ -22,4 +22,7 @@
   background-color: rgb(31, 31, 31);
   color: thistle;
   font-size: larger;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
