@@ -2,10 +2,10 @@
 
 function getConnection()
 {
-    $servername = "web008.wifiooe.at";
-    $username = "web008";
+    $servername = "";
+    $username = "";
     $password = "";
-    $dbname = "web008";
+    $dbname = "";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
     if ($conn->connect_error) {
