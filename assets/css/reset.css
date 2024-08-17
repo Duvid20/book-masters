@@ -1,35 +1,30 @@
-/* Remove all the default margin, padding, and border */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Roboto", Sans-Serif;
 }
 
-/* Set a consistent base font size and family */
 html {
   font-size: 100%;
   font-family: Arial, sans-serif;
 }
 
-/* Remove default list styles */
 ul,
 ol {
   list-style: none;
 }
 
-/* Remove default link styles */
 a {
   text-decoration: none;
   color: inherit;
 }
 
-/* Remove default table styles */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* Remove default form element styles */
 input,
 button,
 textarea,
