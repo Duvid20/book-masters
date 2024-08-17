@@ -21,7 +21,7 @@ jobs:
           username: ${{ secrets.DB_USERNAME }}
           password: ${{ secrets.DB_PASSWORD }}
           local-dir: ./
-          server-dir: /httpdocs/bookMasters
+          server-dir: /httpdocs/bookMasters/
           exclude: |
             **/.git*
             **/.git*/**
