@@ -53,29 +53,18 @@ document.addEventListener("DOMContentLoaded", function () {
     msgContainerDiv.appendChild(msgDiv);
   }
 
-  function checkInput(
+  function checkIfInputAlreadyExists(
     inputFieldName,
     nameString,
-    inputFieldElement,
+    inputFieldElementId,
     buttonElementId,
     url,
-    minLength,
     inputAreaId,
     msgType
   ) {
+    const inputFieldElement = document.getElementById(inputFieldElementId);
     const value = inputFieldElement.value.trim();
     const buttonElement = document.getElementById(buttonElementId);
-
-    if (value.length < minLength) {
-      showUserInputMsg(
-        inputAreaId,
-        undefined,
-        `${nameString} must be ${minLength}+ characters`,
-        msgType
-      );
-      setDisabled(buttonElement, true);
-      return;
-    }
 
     fetch(url, {
       method: "POST",
@@ -106,30 +95,96 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  function checkInputLength(
+    nameString,
+    inputFieldElementId,
+    buttonElementId,
+    minLength,
+    inputAreaId,
+    msgType
+  ) {
+    const buttonElement = document.getElementById(buttonElementId);
+    const inputFieldElement = document.getElementById(inputFieldElementId);
+    const value = inputFieldElement.value.trim();
+    if (value.length < minLength) {
+      showUserInputMsg(
+        inputAreaId,
+        undefined,
+        `${nameString} must be ${minLength}+ characters`,
+        msgType
+      );
+      setDisabled(buttonElement, true);
+      return true;
+    }
+    return false;
+  }
+
+  function checkEmailFormat(
+    inputFieldElementId,
+    buttonElementId,
+    inputAreaId,
+    msgType
+  ) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const buttonElement = document.getElementById(buttonElementId);
+    const inputFieldElement = document.getElementById(inputFieldElementId);
+    const value = inputFieldElement.value.trim();
+
+    if (!emailRegex.test(value)) {
+      showUserInputMsg(
+        inputAreaId,
+        true,
+        "Email must be right format",
+        msgType
+      );
+      setDisabled(buttonElement, true);
+      return true;
+    }
+    return false;
+  }
+
   function checkUsernameInput() {
-    checkInput(
-      "username",
+    let hasWrongLength = checkInputLength(
       "Username",
-      registerUsernameInput,
+      "register-username-input",
       "register-username-btn",
-      "/includes/auth/check-username.php",
       3,
       "register-username",
       "is-username-available"
     );
+
+    if (!hasWrongLength) {
+      checkIfInputAlreadyExists(
+        "username",
+        "Username",
+        "register-username-input",
+        "register-username-btn",
+        "/includes/auth/check-username.php",
+        "register-username",
+        "is-username-available"
+      );
+    }
   }
 
   function checkEmailInput() {
-    checkInput(
-      "email",
-      "Email",
-      registerEmailInput,
+    let hasWrongFormat = checkEmailFormat(
+      "register-email-input",
       "register-email-btn",
-      "/includes/auth/check-email.php",
-      3,
       "register-email",
       "is-email-available"
     );
+
+    if (!hasWrongFormat) {
+      checkIfInputAlreadyExists(
+        "email",
+        "Email",
+        "register-email-input",
+        "register-email-btn",
+        "/includes/auth/check-email.php",
+        "register-email",
+        "is-email-available"
+      );
+    }
   }
 
   function showNextRegisterStep() {
@@ -182,10 +237,6 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentRegisterStep = 0;
   let currentLoginStep = 0;
 
-  // initial check of inputs
-  checkUsernameInput();
-  checkEmailInput();
-
   // iterate through register page steps
   buttonsRegister.forEach((button) => {
     button.addEventListener("click", showNextRegisterStep);
@@ -197,12 +248,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // check if username is available and correct length
-  registerUsernameInput.addEventListener("input", function () {
-    checkUsernameInput();
-  });
-  registerEmailInput.addEventListener("input", function () {
-    checkEmailInput();
-  });
+  registerUsernameInput.addEventListener("input", checkUsernameInput);
+  registerEmailInput.addEventListener("input", checkEmailInput);
 
   registerBackButton.addEventListener("click", showPreviousRegisterStep);
 });
