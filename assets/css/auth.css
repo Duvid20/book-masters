@@ -1,13 +1,21 @@
-input {
+.auth-item {
   border-radius: 10px;
   height: 5vh;
   min-height: 30px;
   max-height: 40px;
   width: 100%;
   max-width: 300px;
+  background-color: white;
+  border: none;
+  letter-spacing: 1px;
 }
 
-input[type="submit"] {
+.auth-item:focus {
+  border: none;
+  outline: rgb(0, 110, 255) auto 1px;
+}
+
+.auth-btn {
   background-color: rgb(0, 110, 255);
   color: white;
   font-size: large;
@@ -15,7 +23,7 @@ input[type="submit"] {
   border: 1px solid wheat;
 }
 
-input[type="submit"]:hover {
+.auth-btn:hover {
   background-color: rgb(74, 129, 218);
 }
 
@@ -33,7 +41,6 @@ input[type="submit"]:hover {
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
   padding: 20px;
 }
 
@@ -41,5 +48,44 @@ input[type="submit"]:hover {
   font-size: small;
   width: 100%;
   text-align: center;
-  /* white-space: nowrap; */
+}
+
+.user-input-area {
+  display: none;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.user-input-area.active {
+  display: flex;
+}
+
+.user-input-msg-container {
+  font-size: small;
+  padding-left: 6px;
+}
+
+.user-input-msg {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  align-items: top;
+  height: 18px;
+}
+
+.user-input-msg-neutral {
+  color: white;
+}
+
+.user-input-msg-error {
+  color: rgb(235, 205, 205);
+}
+
+.user-input-msg-success {
+  color: rgb(92, 200, 92);
+}
+
+.user-input-msg-icon {
+  width: 10px;
+  text-align: center;
 }

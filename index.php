@@ -31,5 +31,6 @@ require_once 'includes/db.php';
 
 <script src="assets/js/utils.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/auth.js"></script>
 
 </html>
