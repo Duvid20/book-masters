@@ -318,13 +318,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   registerBackButton.addEventListener("click", showPreviousRegisterStep);
 
-  // sending email
-  document
-    .getElementById("send-email-btn")
-    .addEventListener("click", function () {
-      const to = "recipient@example.com";
-      const subject = "Test Email";
-      const message = "This is a test email sent from JavaScript.";
-      sendEmail(to, subject, message);
-    });
+  // // sending email
+  // document
+  //   .getElementById("send-email-btn")
+  //   .addEventListener("click", function () {
+  //     const to = "recipient@example.com";
+  //     const subject = "Test Email";
+  //     const message = "This is a test email sent from JavaScript.";
+  //     sendEmail(to, subject, message);
+  //   });
 });
