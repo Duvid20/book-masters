@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("auth.js DOMContentLoaded");
+
   function showUserInputMsg(inputAreaId, isError, msg, msgType) {
     // input area
     const inputAreaDiv = document.getElementById(inputAreaId);
@@ -12,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
       msgContainerDiv.classList.add("user-input-msg-container");
       inputAreaDiv.appendChild(msgContainerDiv);
 
-      // insert before button
+      // insert msgContainerDiv before button
       const button = inputAreaDiv.querySelector("button");
       inputAreaDiv.insertBefore(msgContainerDiv, button);
     }
@@ -34,17 +36,15 @@ document.addEventListener("DOMContentLoaded", function () {
     switch (isError) {
       case undefined:
         msgDiv.classList.add("user-input-msg-neutral");
-        msgIconDiv.innerHTML = "?";
+        msgIconDiv.innerHTML = "◬";
         break;
       case true:
         msgDiv.classList.add("user-input-msg-error");
         msgIconDiv.innerHTML = "✕";
-
         break;
       case false:
         msgDiv.classList.add("user-input-msg-success");
         msgIconDiv.innerHTML = "✓";
-
         break;
     }
 
@@ -53,77 +53,117 @@ document.addEventListener("DOMContentLoaded", function () {
     msgContainerDiv.appendChild(msgDiv);
   }
 
-  function checkUsername() {
-    const username = registerUsernameInput.value;
+  function checkInput(
+    inputFieldName,
+    nameString,
+    inputFieldElement,
+    buttonElementId,
+    url,
+    minLength,
+    inputAreaId,
+    msgType
+  ) {
+    const value = inputFieldElement.value;
+    const buttonElement = document.getElementById(buttonElementId);
 
-    // check if username fulfills requirements
-    if (username.length < 3) {
+    if (value.length < minLength) {
       showUserInputMsg(
-        "register-username",
+        inputAreaId,
         undefined,
-        "Username must be 3 or more chars",
-        "is-username-available"
+        `${nameString} must be ${minLength}+ characters`,
+        msgType
       );
+      setDisabled(buttonElement, true);
       return;
     }
 
-    // check if username is already in use
-    fetch("/includes/auth/check-username.php", {
+    fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: `username=${username}`,
+      body: `${inputFieldName}=${value}`,
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
           showUserInputMsg(
-            "register-username",
+            inputAreaId,
             false,
-            "Username available",
-            "is-username-available"
+            `${nameString} available`,
+            msgType
           );
+          setDisabled(buttonElement, false);
         } else {
           showUserInputMsg(
-            "register-username",
+            inputAreaId,
             true,
-            "Username already in use",
-            "is-username-available"
+            `${nameString} already in use`,
+            msgType
           );
+          setDisabled(buttonElement, true);
         }
       });
   }
 
-  const dataFetchInvetval = 300;
-  let debounceTimeoutUsername;
+  function checkUsernameInput() {
+    checkInput(
+      "username",
+      "Username",
+      registerUsernameInput,
+      "register-username-btn",
+      "/includes/auth/check-username.php",
+      3,
+      "register-username",
+      "is-username-available"
+    );
+  }
 
   // init dom elements
-  const registerUsernameInput = document.getElementById(
-    "register-username-input"
-  );
+  const buttonsRegister = document.querySelectorAll(".button-register");
+  const buttonsLogin = document.querySelectorAll(".button-login");
+
   const userInputAreasRegister = document.querySelectorAll(
     ".user-input-area-register"
   );
-  const buttonsRegister = document.querySelectorAll(".button-register");
+  const registerUsernameInput = document.getElementById(
+    "register-username-input"
+  );
 
+  let currentRegisterStep = 0;
+  let currentLoginStep = 0;
+
+  function showNextRegisterStep() {
+    if (currentRegisterStep < userInputAreasRegister.length - 1) {
+      userInputAreasRegister[currentRegisterStep].classList.remove("active");
+      currentRegisterStep++;
+      userInputAreasRegister[currentRegisterStep].classList.add("active");
+    }
+  }
+
+  function showNextLoginStep() {
+    if (currentLoginStep < userInputAreasLogin.length - 1) {
+      userInputAreasRegister[currentLoginStep].classList.remove("active");
+      currentLoginStep++;
+      userInputAreasRegister[currentLoginStep].classList.add("active");
+    }
+  }
+
+  // initial check of inputs
+  checkUsernameInput();
+
+  // iterate through register page steps
   buttonsRegister.forEach((button) => {
     button.addEventListener("click", showNextRegisterStep);
   });
 
-  // iterate through register steps
-  let currentStep = 0;
-  function showNextRegisterStep() {
-    if (currentStep < userInputAreasRegister.length - 1) {
-      userInputAreasRegister[currentStep].classList.remove("active");
-      currentStep++;
-      userInputAreasRegister[currentStep].classList.add("active");
-    }
-  }
+  // iterate through login page steps
+  buttonsLogin.forEach((button) => {
+    button.addEventListener("click", showNextLoginStep);
+  });
 
-  // check whether or not username is already in use every x ms
+  // check if username is available and correct length
   registerUsernameInput.addEventListener("input", function () {
-    clearTimeout(debounceTimeoutUsername);
-    debounceTimeoutUsername = setTimeout(checkUsername, dataFetchInvetval);
+    checkUsernameInput();
   });
 });

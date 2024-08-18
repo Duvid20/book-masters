@@ -27,6 +27,11 @@
   background-color: rgb(74, 129, 218);
 }
 
+.auth-btn:disabled {
+  background-color: grey;
+  cursor: default;
+}
+
 .text-input {
   padding-left: 10px;
 }
@@ -69,7 +74,7 @@
   display: flex;
   flex-direction: row;
   gap: 3px;
-  align-items: top;
+  align-items: center;
   height: 18px;
 }
 
