@@ -48,6 +48,7 @@
   flex-direction: column;
   padding: 20px;
   align-items: center;
+  gap: 8px;
 }
 
 .account-message {
@@ -59,7 +60,7 @@
 .user-input-area {
   display: none;
   flex-direction: column;
-  gap: 3px;
+  gap: 8px;
 }
 
 .user-input-area.active {
@@ -100,7 +101,6 @@
   display: none;
   width: 35%;
   background-color: rgb(173, 205, 237);
-  margin-top: 8px;
   text-align: center;
   overflow: hidden;
 }

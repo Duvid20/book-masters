@@ -3,14 +3,12 @@
 $errors = [];
 
 if (!empty(array_filter($_POST))) {
-    $username = sanitizeInput($_POST['username']);
-    $email = sanitizeInput($_POST['email']);
-    $password = sanitizeInput($_POST['password']);
-    $revisePassword = sanitizeInput($_POST['revise-password']);
-
     var_dump($_POST);
+
+    // todo:
     // shorten username to max size as defined in db and input field
     // add link to login page if username/email is already in use and autofill username/email input
+    // update h1 header to show current step
 
     if ($password !== $revisePassword) {
         $errors[] = "Passwords do not match.";
@@ -54,6 +52,12 @@ if (!empty(array_filter($_POST))) {
         <div class="user-input-area user-input-area-register" id="register-email">
             <input class="text-input auth-item" id="register-email-input" type="email" name="email" placeholder="Email">
             <button class="auth-item auth-btn button-register" id="register-email-btn" type="button" disabled>Continue</button>
+        </div>
+
+        <div class="user-input-area user-input-area-register" id="verify-email">
+            <button class="auth-item auth-btn" id="send-verif-code-btn" type="button">Send Code</button>
+            <input class="text-input auth-item" id="verif-code-input" type="text" name="verif-code" placeholder="Code from Email">
+            <button class="auth-item auth-btn button-register" id="verify-email-btn" type="button" disabled>Continue</button>
         </div>
 
         <div class="user-input-area user-input-area-register" id="register-password">

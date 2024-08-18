@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     switch (isError) {
       case undefined:
         msgDiv.classList.add("user-input-msg-neutral");
-        msgIconDiv.innerHTML = "◬";
+        msgIconDiv.innerHTML = "i";
         break;
       case true:
         msgDiv.classList.add("user-input-msg-error");
@@ -143,53 +143,99 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   }
 
+  function isInputEmpty(
+    nameString,
+    inputFieldElementId,
+    buttonElementId,
+    inputAreaId,
+    msgType
+  ) {
+    const inputFieldElement = document.getElementById(inputFieldElementId);
+    const buttonElement = document.getElementById(buttonElementId);
+    const value = inputFieldElement.value.trim();
+
+    if (value === "") {
+      showUserInputMsg(
+        inputAreaId,
+        undefined,
+        `Enter your ${nameString}`,
+        msgType
+      );
+      setDisabled(buttonElement, true);
+      return true;
+    }
+    return false;
+  }
+
   function checkUsernameInput() {
-    let hasWrongLength = checkInputLength(
-      "Username",
+    let isEmpty = isInputEmpty(
+      "username",
       "register-username-input",
       "register-username-btn",
-      3,
       "register-username",
       "is-username-available"
     );
 
-    if (!hasWrongLength) {
-      checkIfInputAlreadyExists(
-        "username",
+    if (!isEmpty) {
+      let hasWrongLength = checkInputLength(
         "Username",
         "register-username-input",
         "register-username-btn",
-        "/includes/auth/check-username.php",
+        3,
         "register-username",
         "is-username-available"
       );
+
+      if (!hasWrongLength) {
+        checkIfInputAlreadyExists(
+          "username",
+          "Username",
+          "register-username-input",
+          "register-username-btn",
+          "/includes/auth/check-username.php",
+          "register-username",
+          "is-username-available"
+        );
+      }
     }
   }
 
   function checkEmailInput() {
-    let hasWrongFormat = checkEmailFormat(
+    let isEmpty = isInputEmpty(
+      "email",
       "register-email-input",
       "register-email-btn",
       "register-email",
       "is-email-available"
     );
 
-    if (!hasWrongFormat) {
-      checkIfInputAlreadyExists(
-        "email",
-        "Email",
+    if (!isEmpty) {
+      let hasWrongFormat = checkEmailFormat(
         "register-email-input",
         "register-email-btn",
-        "/includes/auth/check-email.php",
         "register-email",
         "is-email-available"
       );
+
+      if (!hasWrongFormat) {
+        checkIfInputAlreadyExists(
+          "email",
+          "Email",
+          "register-email-input",
+          "register-email-btn",
+          "/includes/auth/check-email.php",
+          "register-email",
+          "is-email-available"
+        );
+      }
     }
   }
 
   function showNextRegisterStep() {
-    console.log("showNextRegisterStep");
     if (currentRegisterStep < userInputAreasRegister.length - 1) {
+      checkUsernameInput();
+      checkEmailInput();
+
       userInputAreasRegister[currentRegisterStep].classList.remove("active");
       currentRegisterStep++;
       userInputAreasRegister[currentRegisterStep].classList.add("active");
@@ -200,8 +246,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function showPreviousRegisterStep() {
-    console.log("showPreviousRegisterStep");
     if (currentRegisterStep > 0) {
+      checkUsernameInput();
+      checkEmailInput();
+
       userInputAreasRegister[currentRegisterStep].classList.remove("active");
       currentRegisterStep--;
       userInputAreasRegister[currentRegisterStep].classList.add("active");
@@ -237,6 +285,10 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentRegisterStep = 0;
   let currentLoginStep = 0;
 
+  // initial check
+  checkUsernameInput();
+  checkEmailInput();
+
   // iterate through register page steps
   buttonsRegister.forEach((button) => {
     button.addEventListener("click", showNextRegisterStep);
@@ -252,4 +304,14 @@ document.addEventListener("DOMContentLoaded", function () {
   registerEmailInput.addEventListener("input", checkEmailInput);
 
   registerBackButton.addEventListener("click", showPreviousRegisterStep);
+
+  // sending email
+  document
+    .getElementById("send-email-btn")
+    .addEventListener("click", function () {
+      const to = "recipient@example.com";
+      const subject = "Test Email";
+      const message = "This is a test email sent from JavaScript.";
+      sendEmail(to, subject, message);
+    });
 });
