@@ -41,7 +41,8 @@ if (!empty(array_filter($_POST))) {
 ?>
 <div class="auth-page-container">
 
-    <h1>Register</h1>
+    <div class="auth-header">Register</div>
+    <div class="auth-sub-header" id="register-sub-header">Choose your username</div>
 
     <form class="auth-form" id="register-form" action="/" method="POST">
         <div class="user-input-area user-input-area-register active" id="register-username">

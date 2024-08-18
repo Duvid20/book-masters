@@ -242,6 +242,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // show back-button
       registerBackButton.style.display = "block";
+
+      // change sub header text
+      registerSubHeader.innerHTML = subHeaderTexts[currentRegisterStep];
     }
   }
 
@@ -258,6 +261,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (currentRegisterStep === 0) {
         registerBackButton.style.display = "none";
       }
+
+      // change sub header text
+      registerSubHeader.innerHTML = subHeaderTexts[currentRegisterStep];
     }
   }
 
@@ -281,6 +287,13 @@ document.addEventListener("DOMContentLoaded", function () {
     "register-username-input"
   );
   const registerEmailInput = document.getElementById("register-email-input");
+  const registerSubHeader = document.getElementById("register-sub-header");
+  const subHeaderTexts = [
+    "Choose your username",
+    "Enter your email",
+    "Verify your email",
+    "Set your password",
+  ];
 
   let currentRegisterStep = 0;
   let currentLoginStep = 0;
