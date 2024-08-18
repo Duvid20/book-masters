@@ -10,6 +10,7 @@ if (!empty(array_filter($_POST))) {
 
     var_dump($_POST);
     // shorten username to max size as defined in db and input field
+    // add link to login page if username/email is already in use and autofill username/email input
 
     if ($password !== $revisePassword) {
         $errors[] = "Passwords do not match.";
@@ -47,12 +48,12 @@ if (!empty(array_filter($_POST))) {
     <form class="auth-form" id="register-form" action="/" method="POST">
         <div class="user-input-area user-input-area-register active" id="register-username">
             <input class="text-input auth-item" id="register-username-input" type="text" name="username" placeholder="Username" maxlength="16">
-            <button class="auth-item auth-btn register-button" type="button" id="register-username-btn" disabled>Continue</button>
+            <button class="auth-item auth-btn button-register" id="register-username-btn" type="button" disabled>Continue</button>
         </div>
 
         <div class="user-input-area user-input-area-register" id="register-email">
-            <input class="text-input auth-item" id="register-email-input" type="text" name="email" placeholder="Email">
-            <button class="auth-item auth-btn register-button" type="button" disabled>Continue</button>
+            <input class="text-input auth-item" id="register-email-input" type="email" name="email" placeholder="Email">
+            <button class="auth-item auth-btn button-register" id="register-email-btn" type="button" disabled>Continue</button>
         </div>
 
         <div class="user-input-area user-input-area-register" id="register-password">
@@ -60,10 +61,16 @@ if (!empty(array_filter($_POST))) {
             <input class="text-input auth-item" id="register-revise-password-input" type="password" name="revise-password" placeholder="Revise password">
             <input class="auth-item auth-btn" type="submit" value="Submit" disabled>
         </div>
+
+        <button class="auth-item auth-btn auth-back-btn" id="register-back-btn" type="button" title="Back">
+            <i class="fas fa-arrow-left"></i>
+        </button>
     </form>
 
     <div class="account-message">
         Already have an account? Log in.
     </div>
+
+
 
 </div>

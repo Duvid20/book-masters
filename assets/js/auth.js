@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
     inputAreaId,
     msgType
   ) {
-    const value = inputFieldElement.value;
+    const value = inputFieldElement.value.trim();
     const buttonElement = document.getElementById(buttonElementId);
 
     if (value.length < minLength) {
@@ -119,25 +119,42 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  // init dom elements
-  const buttonsRegister = document.querySelectorAll(".button-register");
-  const buttonsLogin = document.querySelectorAll(".button-login");
-
-  const userInputAreasRegister = document.querySelectorAll(
-    ".user-input-area-register"
-  );
-  const registerUsernameInput = document.getElementById(
-    "register-username-input"
-  );
-
-  let currentRegisterStep = 0;
-  let currentLoginStep = 0;
+  function checkEmailInput() {
+    checkInput(
+      "email",
+      "Email",
+      registerEmailInput,
+      "register-email-btn",
+      "/includes/auth/check-email.php",
+      3,
+      "register-email",
+      "is-email-available"
+    );
+  }
 
   function showNextRegisterStep() {
+    console.log("showNextRegisterStep");
     if (currentRegisterStep < userInputAreasRegister.length - 1) {
       userInputAreasRegister[currentRegisterStep].classList.remove("active");
       currentRegisterStep++;
       userInputAreasRegister[currentRegisterStep].classList.add("active");
+
+      // show back-button
+      registerBackButton.style.display = "block";
+    }
+  }
+
+  function showPreviousRegisterStep() {
+    console.log("showPreviousRegisterStep");
+    if (currentRegisterStep > 0) {
+      userInputAreasRegister[currentRegisterStep].classList.remove("active");
+      currentRegisterStep--;
+      userInputAreasRegister[currentRegisterStep].classList.add("active");
+
+      // hide back-button
+      if (currentRegisterStep === 0) {
+        registerBackButton.style.display = "none";
+      }
     }
   }
 
@@ -149,8 +166,25 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // init dom elements
+  const buttonsRegister = document.querySelectorAll(".button-register");
+  const buttonsLogin = document.querySelectorAll(".button-login");
+  const registerBackButton = document.getElementById("register-back-btn");
+
+  const userInputAreasRegister = document.querySelectorAll(
+    ".user-input-area-register"
+  );
+  const registerUsernameInput = document.getElementById(
+    "register-username-input"
+  );
+  const registerEmailInput = document.getElementById("register-email-input");
+
+  let currentRegisterStep = 0;
+  let currentLoginStep = 0;
+
   // initial check of inputs
   checkUsernameInput();
+  checkEmailInput();
 
   // iterate through register page steps
   buttonsRegister.forEach((button) => {
@@ -166,4 +200,9 @@ document.addEventListener("DOMContentLoaded", function () {
   registerUsernameInput.addEventListener("input", function () {
     checkUsernameInput();
   });
+  registerEmailInput.addEventListener("input", function () {
+    checkEmailInput();
+  });
+
+  registerBackButton.addEventListener("click", showPreviousRegisterStep);
 });

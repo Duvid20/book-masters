@@ -47,6 +47,7 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
+  align-items: center;
 }
 
 .account-message {
@@ -93,4 +94,13 @@
 .user-input-msg-icon {
   width: 10px;
   text-align: center;
+}
+
+.auth-back-btn {
+  display: none;
+  width: 35%;
+  background-color: rgb(173, 205, 237);
+  margin-top: 8px;
+  text-align: center;
+  overflow: hidden;
 }
