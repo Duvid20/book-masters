@@ -3,11 +3,11 @@
   height: 5vh;
   min-height: 30px;
   max-height: 40px;
-  width: 100%;
-  max-width: 300px;
+  width: 80vw;
   background-color: white;
   border: none;
   letter-spacing: 1px;
+  font-size: medium;
 }
 
 .auth-item:focus {
@@ -21,6 +21,7 @@
   font-size: large;
   cursor: pointer;
   border: 1px solid wheat;
+  margin-top: 4px;
 }
 
 .auth-btn:hover {
@@ -32,8 +33,20 @@
   cursor: default;
 }
 
+#send-verif-code-btn {
+  margin-bottom: 4px;
+}
+
 .text-input {
   padding-left: 10px;
+}
+
+.auth-item-medium {
+  max-width: 230px;
+}
+
+.auth-item-large {
+  max-width: 300px;
 }
 
 .auth-page-container {
@@ -60,16 +73,18 @@
 .user-input-area {
   display: none;
   flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  gap: 2px;
 }
 
-.user-input-area.active {
+.user-input-area.active { 
   display: flex;
 }
 
 .user-input-msg-container {
   font-size: small;
   padding-left: 6px;
+  padding-top: 1px;
 }
 
 .user-input-msg {
@@ -77,7 +92,9 @@
   flex-direction: row;
   gap: 3px;
   align-items: center;
-  height: 18px;
+  justify-content: center;
+  height: fit-content;
+  min-height: 18px;
 }
 
 .user-input-msg-neutral {
@@ -112,4 +129,5 @@
 
 .auth-sub-header {
   font-size: medium;
+  text-align: center;
 }

@@ -9,7 +9,7 @@
 }
 
 /* phone */
-@media (max-width: 769px) {
+@media (max-width: 767px) {
   #nav {
     flex-direction: row;
     padding: 0 10vw;

@@ -1,3 +1,13 @@
+const subHeaderTexts = [
+  "Choose your username",
+  "Enter your email",
+  "Verify your email",
+  "Set your password",
+];
+
+let currentRegisterStep = 0;
+let currentLoginStep = 0;
+
 document.addEventListener("DOMContentLoaded", function () {
   console.log("auth.js DOMContentLoaded");
 
@@ -51,6 +61,15 @@ document.addEventListener("DOMContentLoaded", function () {
     msgDiv.appendChild(msgIconDiv);
     msgDiv.innerHTML += msg;
     msgContainerDiv.appendChild(msgDiv);
+  }
+
+  function deleteUserInputMsg(inputAreaId, msgType) {
+    const inputAreaDiv = document.getElementById(inputAreaId);
+    const msgContainerDiv = inputAreaDiv.querySelector(
+      ".user-input-msg-container"
+    );
+    const msgDiv = msgContainerDiv.querySelector(`.${msgType}`);
+    msgDiv.remove();
   }
 
   function checkIfInputAlreadyExists(
@@ -167,6 +186,69 @@ document.addEventListener("DOMContentLoaded", function () {
     return false;
   }
 
+  function checkValuesMatch(
+    nameString,
+    inputFieldElementId1,
+    inputFieldElementId2,
+    buttonElementId,
+    inputAreaId,
+    msgType
+  ) {
+    const buttonElement = document.getElementById(buttonElementId);
+    const inputFieldElement1 = document.getElementById(inputFieldElementId1);
+    const inputFieldElement2 = document.getElementById(inputFieldElementId2);
+    const value1 = inputFieldElement1.value.trim();
+    const value2 = inputFieldElement2.value.trim();
+
+    if (value1 != value2) {
+      showUserInputMsg(
+        inputAreaId,
+        undefined,
+        `${nameString} have to match`,
+        msgType
+      );
+      setDisabled(buttonElement, true);
+      return true;
+    }
+    return false;
+  }
+
+  function containsChars(value, chars) {
+    const regex = new RegExp(`[${chars}]`);
+    return regex.test(value);
+  }
+
+  function checkValueContainsChars(
+    chars,
+    inputFieldElementId,
+    buttonElementId,
+    inputAreaId,
+    msgType
+  ) {
+    const buttonElement = document.getElementById(buttonElementId);
+    const inputFieldElement = document.getElementById(inputFieldElementId);
+    const value = inputFieldElement.value.trim();
+
+    if (!containsChars(value, chars)) {
+      showUserInputMsg(
+        inputAreaId,
+        true,
+        "Password must contain " + chars,
+        msgType
+      );
+      setDisabled(buttonElement, true);
+      return true;
+    } else {
+      showUserInputMsg(
+        inputAreaId,
+        false,
+        "Password contains " + chars,
+        msgType
+      );
+    }
+    return false;
+  }
+
   function checkUsernameInput() {
     let isEmpty = isInputEmpty(
       "username",
@@ -231,6 +313,79 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function checkPasswordInput() {
+    const passwordMinimumLength = 14;
+    const containsLowercase = checkValueContainsChars(
+      "a-z",
+      "register-password-input",
+      "register-password-btn",
+      "register-password",
+      "password-lowercase"
+    );
+    const containsUppercase = checkValueContainsChars(
+      "A-Z",
+      "register-password-input",
+      "register-password-btn",
+      "register-password",
+      "password-uppercase"
+    );
+    const containsNumber = checkValueContainsChars(
+      "0-9",
+      "register-password-input",
+      "register-password-btn",
+      "register-password",
+      "password-number"
+    );
+    const containsSpecialChars = checkValueContainsChars(
+      "@$!%*?&",
+      "register-password-input",
+      "register-password-btn",
+      "register-password",
+      "password-special-chars"
+    );
+
+    let isEmpty = isInputEmpty(
+      "Password",
+      "register-password-input",
+      "register-password-btn",
+      "register-password",
+      "is-password-correct"
+    );
+
+    let hasWrongLength = false;
+
+    if (!isEmpty) {
+      hasWrongLength = checkInputLength(
+        "Password",
+        "register-password-input",
+        "register-password-btn",
+        passwordMinimumLength,
+        "register-password",
+        "is-password-correct"
+      );
+    }
+
+    if (!isEmpty && !hasWrongLength) {
+      let areValuesNotMatching = checkValuesMatch(
+        "Passwords",
+        "register-password-input",
+        "register-password-confirm-input",
+        "register-password-btn",
+        "register-password",
+        "is-password-correct"
+      );
+
+      if (!areValuesNotMatching) {
+        showUserInputMsg(
+          "register-password",
+          false,
+          "Passwords match",
+          "is-password-correct"
+        );
+      }
+    }
+  }
+
   function showNextRegisterStep() {
     if (currentRegisterStep < userInputAreasRegister.length - 1) {
       checkUsernameInput();
@@ -257,7 +412,7 @@ document.addEventListener("DOMContentLoaded", function () {
       currentRegisterStep--;
       userInputAreasRegister[currentRegisterStep].classList.add("active");
 
-      // hide back-button
+      // hide back-button if on first step
       if (currentRegisterStep === 0) {
         registerBackButton.style.display = "none";
       }
@@ -283,24 +438,24 @@ document.addEventListener("DOMContentLoaded", function () {
   const userInputAreasRegister = document.querySelectorAll(
     ".user-input-area-register"
   );
+
   const registerUsernameInput = document.getElementById(
     "register-username-input"
   );
   const registerEmailInput = document.getElementById("register-email-input");
-  const registerSubHeader = document.getElementById("register-sub-header");
-  const subHeaderTexts = [
-    "Choose your username",
-    "Enter your email",
-    "Verify your email",
-    "Set your password",
-  ];
+  const registerPasswordInput = document.getElementById(
+    "register-password-input"
+  );
+  const registerPasswordConfirmInput = document.getElementById(
+    "register-password-confirm-input"
+  );
 
-  let currentRegisterStep = 0;
-  let currentLoginStep = 0;
+  const registerSubHeader = document.getElementById("register-sub-header");
 
   // initial check
   checkUsernameInput();
   checkEmailInput();
+  checkPasswordInput();
 
   // iterate through register page steps
   buttonsRegister.forEach((button) => {
@@ -315,6 +470,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // check if username is available and correct length
   registerUsernameInput.addEventListener("input", checkUsernameInput);
   registerEmailInput.addEventListener("input", checkEmailInput);
+  registerPasswordInput.addEventListener("input", () => {
+    checkPasswordInput();
+  });
+  registerPasswordConfirmInput.addEventListener("input", () => {
+    checkPasswordInput();
+  });
 
   registerBackButton.addEventListener("click", showPreviousRegisterStep);
 
