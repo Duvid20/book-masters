@@ -1,7 +1,7 @@
 CREATE TABLE `_users` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `given_name` varchar(20) NOT NULL,
-  `family_name` varchar(20) NOT NULL,
+  `given_name` varchar(50) NOT NULL,
+  `family_name` varchar(30) NOT NULL,
   `username` varchar(16) NOT NULL,
   `password` varchar(255) NOT NULL,
   `is_admin` tinyint(1) NOT NULL,
@@ -13,8 +13,8 @@ CREATE TABLE `_users` (
 
 CREATE TABLE `_authors` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `given_name` varchar(20) NOT NULL,
-  `family_name` varchar(20) NOT NULL,
+  `given_name` varchar(50) NOT NULL,
+  `family_name` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 

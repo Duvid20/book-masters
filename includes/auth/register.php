@@ -8,6 +8,7 @@ if (!empty(array_filter($_POST))) {
     // update h1 header to show current step
     // trigger continue button on enter-key press
     // shorten input fields to max size as defined in db
+    // only allow continuze buttons triggering with keyboard keys if button is active
 
     // // example for saving data to db
     // $username = "jshdjs/3h";
@@ -49,14 +50,14 @@ if (!empty(array_filter($_POST))) {
         </div>
 
         <div class="user-input-area user-input-area-register" id="register-password">
-            <input class="text-input auth-item auth-item-medium" id="register-password-input" type="password" name="password" placeholder="Password">
-            <input class="text-input auth-item auth-item-medium" id="register-password-confirm-input" type="password" name="password-confirm" placeholder="Confirm password">
+            <input class="text-input auth-item auth-item-medium" id="register-password-input" type="password" name="password" placeholder="Password" maxlength="20">
+            <input class="text-input auth-item auth-item-medium" id="register-password-confirm-input" type="password" name="password-confirm" placeholder="Confirm password" maxlength="20">
             <button class="auth-item auth-btn button-register auth-item-medium" id="register-password-btn" type="button" disabled>Continue</button>
         </div>
 
         <div class="user-input-area user-input-area-register" id="register-full-name">
-            <input class="text-input auth-item auth-item-medium" id="register-given-name-input" type="text" name="given-name" placeholder="Given name">
-            <input class="text-input auth-item auth-item-medium" id="register-family-name-input" type="text" name="family-name" placeholder="Family name">
+            <input class="text-input auth-item auth-item-medium" id="register-given-name-input" type="text" name="given-name" placeholder="Given name(s)" maxlength="50">
+            <input class="text-input auth-item auth-item-medium" id="register-family-name-input" type="text" name="family-name" placeholder="Family name" maxlength="20">
             <input class="auth-item auth-btn button-register auth-item-medium" id="register-full-name-btn" type="submit" value="Submit" disabled>
         </div>
 
