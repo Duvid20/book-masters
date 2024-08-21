@@ -76,14 +76,12 @@ document.addEventListener("DOMContentLoaded", function () {
     inputFieldName,
     nameString,
     inputFieldElementId,
-    buttonElementId,
     url,
     inputAreaId,
     msgType
   ) {
     const inputFieldElement = document.getElementById(inputFieldElementId);
     const value = inputFieldElement.value.trim();
-    const buttonElement = document.getElementById(buttonElementId);
 
     fetch(url, {
       method: "POST",
@@ -101,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
             `${nameString} available`,
             msgType
           );
-          setDisabled(buttonElement, false);
+          return false;
         } else {
           showUserInputMsg(
             inputAreaId,
@@ -109,20 +107,18 @@ document.addEventListener("DOMContentLoaded", function () {
             `${nameString} already in use`,
             msgType
           );
-          setDisabled(buttonElement, true);
+          return true;
         }
       });
   }
 
-  function checkInputLength(
+  function checkHasInputWrongLength(
     nameString,
     inputFieldElementId,
-    buttonElementId,
     minLength,
     inputAreaId,
     msgType
   ) {
-    const buttonElement = document.getElementById(buttonElementId);
     const inputFieldElement = document.getElementById(inputFieldElementId);
     const value = inputFieldElement.value.trim();
     if (value.length < minLength) {
@@ -132,20 +128,14 @@ document.addEventListener("DOMContentLoaded", function () {
         `${nameString} must be ${minLength}+ characters`,
         msgType
       );
-      setDisabled(buttonElement, true);
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
-  function checkEmailFormat(
-    inputFieldElementId,
-    buttonElementId,
-    inputAreaId,
-    msgType
-  ) {
+  function checkEmailFormat(inputFieldElementId, inputAreaId, msgType) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const buttonElement = document.getElementById(buttonElementId);
     const inputFieldElement = document.getElementById(inputFieldElementId);
     const value = inputFieldElement.value.trim();
 
@@ -156,21 +146,13 @@ document.addEventListener("DOMContentLoaded", function () {
         "Email must be right format",
         msgType
       );
-      setDisabled(buttonElement, true);
       return true;
     }
     return false;
   }
 
-  function isInputEmpty(
-    nameString,
-    inputFieldElementId,
-    buttonElementId,
-    inputAreaId,
-    msgType
-  ) {
+  function isInputEmpty(nameString, inputFieldElementId, inputAreaId, msgType) {
     const inputFieldElement = document.getElementById(inputFieldElementId);
-    const buttonElement = document.getElementById(buttonElementId);
     const value = inputFieldElement.value.trim();
 
     if (value === "") {
@@ -180,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
         `Enter your ${nameString}`,
         msgType
       );
-      setDisabled(buttonElement, true);
       return true;
     }
     return false;
@@ -190,11 +171,9 @@ document.addEventListener("DOMContentLoaded", function () {
     nameString,
     inputFieldElementId1,
     inputFieldElementId2,
-    buttonElementId,
     inputAreaId,
     msgType
   ) {
-    const buttonElement = document.getElementById(buttonElementId);
     const inputFieldElement1 = document.getElementById(inputFieldElementId1);
     const inputFieldElement2 = document.getElementById(inputFieldElementId2);
     const value1 = inputFieldElement1.value.trim();
@@ -207,10 +186,11 @@ document.addEventListener("DOMContentLoaded", function () {
         `${nameString} have to match`,
         msgType
       );
-      setDisabled(buttonElement, true);
+      return false;
+    } else {
+      showUserInputMsg(inputAreaId, false, `${nameString} match`, msgType);
       return true;
     }
-    return false;
   }
 
   function containsChars(value, chars) {
@@ -221,11 +201,9 @@ document.addEventListener("DOMContentLoaded", function () {
   function checkValueContainsChars(
     chars,
     inputFieldElementId,
-    buttonElementId,
     inputAreaId,
     msgType
   ) {
-    const buttonElement = document.getElementById(buttonElementId);
     const inputFieldElement = document.getElementById(inputFieldElementId);
     const value = inputFieldElement.value.trim();
 
@@ -236,8 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "Password must contain " + chars,
         msgType
       );
-      setDisabled(buttonElement, true);
-      return true;
+      return false;
     } else {
       showUserInputMsg(
         inputAreaId,
@@ -245,48 +222,54 @@ document.addEventListener("DOMContentLoaded", function () {
         "Password contains " + chars,
         msgType
       );
+      return true;
     }
-    return false;
   }
 
   function checkUsernameInput() {
+    const buttonElement = document.getElementById("register-username-btn");
+    setDisabled(buttonElement, true);
+
     let isEmpty = isInputEmpty(
       "username",
       "register-username-input",
-      "register-username-btn",
       "register-username",
       "is-username-available"
     );
 
     if (!isEmpty) {
-      let hasWrongLength = checkInputLength(
+      let hasWrongLength = checkHasInputWrongLength(
         "Username",
         "register-username-input",
-        "register-username-btn",
         3,
         "register-username",
         "is-username-available"
       );
 
       if (!hasWrongLength) {
-        checkIfInputAlreadyExists(
+        let inputAlreadyExists = checkIfInputAlreadyExists(
           "username",
           "Username",
           "register-username-input",
-          "register-username-btn",
           "/includes/auth/check-username.php",
           "register-username",
           "is-username-available"
         );
+
+        if (!inputAlreadyExists) {
+          setDisabled(buttonElement, false);
+        }
       }
     }
   }
 
   function checkEmailInput() {
+    const buttonElement = document.getElementById("register-email-btn");
+    setDisabled(buttonElement, true);
+
     let isEmpty = isInputEmpty(
       "email",
       "register-email-input",
-      "register-email-btn",
       "register-email",
       "is-email-available"
     );
@@ -294,52 +277,53 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!isEmpty) {
       let hasWrongFormat = checkEmailFormat(
         "register-email-input",
-        "register-email-btn",
         "register-email",
         "is-email-available"
       );
 
       if (!hasWrongFormat) {
-        checkIfInputAlreadyExists(
+        let inputAlreadyExists = checkIfInputAlreadyExists(
           "email",
           "Email",
           "register-email-input",
-          "register-email-btn",
           "/includes/auth/check-email.php",
           "register-email",
           "is-email-available"
         );
+
+        if (!inputAlreadyExists) {
+          setDisabled(buttonElement, false);
+        }
       }
     }
   }
 
   function checkPasswordInput() {
     const passwordMinimumLength = 14;
+    const buttonElement = document.getElementById("register-password-btn");
+    setDisabled(buttonElement, true);
+
     const containsLowercase = checkValueContainsChars(
       "a-z",
       "register-password-input",
-      "register-password-btn",
       "register-password",
       "password-lowercase"
     );
     const containsUppercase = checkValueContainsChars(
       "A-Z",
       "register-password-input",
-      "register-password-btn",
       "register-password",
       "password-uppercase"
     );
     const containsNumber = checkValueContainsChars(
       "0-9",
       "register-password-input",
-      "register-password-btn",
       "register-password",
       "password-number"
     );
     const containsSpecialChars = checkValueContainsChars(
       "@$!%*?&",
       "register-password-input",
-      "register-password-btn",
       "register-password",
       "password-special-chars"
     );
@@ -347,41 +331,50 @@ document.addEventListener("DOMContentLoaded", function () {
     let isEmpty = isInputEmpty(
       "Password",
       "register-password-input",
-      "register-password-btn",
       "register-password",
       "is-password-correct"
     );
 
-    let hasWrongLength = false;
+    let hasWrongLength = true;
 
     if (!isEmpty) {
-      hasWrongLength = checkInputLength(
+      hasWrongLength = checkHasInputWrongLength(
         "Password",
         "register-password-input",
-        "register-password-btn",
         passwordMinimumLength,
         "register-password",
         "is-password-correct"
       );
     }
 
-    if (!isEmpty && !hasWrongLength) {
-      let areValuesNotMatching = checkValuesMatch(
+    console.log("containsLowercase", containsLowercase);
+    console.log("containsUppercase", containsUppercase);
+    console.log("containsNumber", containsNumber);
+    console.log("containsSpecialChars", containsSpecialChars);
+    console.log("isEmpty", isEmpty);
+    console.log("hasWrongLength", hasWrongLength);
+
+    if (
+      containsLowercase &&
+      containsUppercase &&
+      containsNumber &&
+      containsSpecialChars &&
+      !isEmpty &&
+      !hasWrongLength
+    ) {
+      console.log("now checking if passwords match");
+      let areValuesMatching = checkValuesMatch(
         "Passwords",
         "register-password-input",
         "register-password-confirm-input",
-        "register-password-btn",
         "register-password",
         "is-password-correct"
       );
 
-      if (!areValuesNotMatching) {
-        showUserInputMsg(
-          "register-password",
-          false,
-          "Passwords match",
-          "is-password-correct"
-        );
+      if (areValuesMatching) {
+        console.log("passwords match, checking if");
+
+        setDisabled(buttonElement, false);
       }
     }
   }

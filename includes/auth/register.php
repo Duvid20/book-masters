@@ -4,10 +4,26 @@ if (!empty(array_filter($_POST))) {
     var_dump($_POST);
 
     // todo:
-    // shorten username to max size as defined in db and input field
     // add link to login page if username/email is already in use and autofill username/email input
     // update h1 header to show current step
     // trigger continue button on enter-key press
+    // shorten input fields to max size as defined in db
+
+    // // example for saving data to db
+    // $username = "jshdjs/3h";
+
+    // // Sanitize input
+    // $username = sanitizeInput($username);
+
+    // // Escape input before storing in the database
+    // $conn = getConnection();
+    // $username = escapeInput($conn, $username);
+
+    // // Use prepared statements to store in the database
+    // $stmt = $conn->prepare("INSERT INTO users (username) VALUES ($username)");
+    // $stmt->execute();
+    // $stmt->close();
+    // $conn->close();
 }
 
 ?>
@@ -35,7 +51,13 @@ if (!empty(array_filter($_POST))) {
         <div class="user-input-area user-input-area-register" id="register-password">
             <input class="text-input auth-item auth-item-medium" id="register-password-input" type="password" name="password" placeholder="Password">
             <input class="text-input auth-item auth-item-medium" id="register-password-confirm-input" type="password" name="password-confirm" placeholder="Confirm password">
-            <input class="auth-item auth-btn button-register auth-item-medium" id="register-password-btn" type="submit" value="Submit" disabled>
+            <button class="auth-item auth-btn button-register auth-item-medium" id="register-password-btn" type="button" disabled>Continue</button>
+        </div>
+
+        <div class="user-input-area user-input-area-register" id="register-full-name">
+            <input class="text-input auth-item auth-item-medium" id="register-given-name-input" type="text" name="given-name" placeholder="Given name">
+            <input class="text-input auth-item auth-item-medium" id="register-family-name-input" type="text" name="family-name" placeholder="Family name">
+            <input class="auth-item auth-btn button-register auth-item-medium" id="register-full-name-btn" type="submit" value="Submit" disabled>
         </div>
 
         <button class="auth-item auth-btn auth-back-btn auth-item-medium" id="register-back-btn" type="button" title="Back">
