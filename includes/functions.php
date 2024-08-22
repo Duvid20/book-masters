@@ -1,6 +1,6 @@
 <?php
 
-function sanitizeInput($data)
+function sanitizeValue($data)
 {
     return htmlspecialchars(trim($data));
 }
@@ -14,4 +14,9 @@ function redirect($url)
 {
     header("Location: $url");
     exit();
+}
+
+function isCsrfTokenValid()
+{
+    return isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token'];
 }

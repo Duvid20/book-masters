@@ -1,30 +1,41 @@
 <?php
 
 if (!empty(array_filter($_POST))) {
-    var_dump($_POST);
+    // var_dump($_POST);
+
+    $givenName = $_POST['given-name'];
+    $familyName = $_POST['family-name'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $email = $_POST['email'];
+
+    $isUsernameInUse = isUsernameInUse($username);
+    $isEmailInUse = isEmailInUse($email);
+
+    if (!$isUsernameInUse && !$isEmailInUse) {
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+        $sql = "INSERT INTO _users (given_name, family_name, username, password) VALUES (?, ?, ?, ?)";
+        $result = executeSQL($sql, [$givenName, $familyName, $username, $password]);
+
+        $sql = "SELECT id FROM _users WHERE username = ?";
+        $result = executeSQL($sql, [$username]);
+        $id = $result[0]['id'];
+
+        $sql = "INSERT INTO _emails (email, f_id_user) VALUES (?, ?)";
+        $result = executeSQL($sql, [$email, $id]);
+        echo "Rows affected: " . $result;
+    } else {
+        //redirect to login page
+        redirect('includes/auth/login.php');
+    }
 
     // todo:
     // add link to login page if username/email is already in use and autofill username/email input
-    // update h1 header to show current step
     // trigger continue button on enter-key press
     // shorten input fields to max size as defined in db
     // only allow continuze buttons triggering with keyboard keys if button is active
-
-    // // example for saving data to db
-    // $username = "jshdjs/3h";
-
-    // // Sanitize input
-    // $username = sanitizeInput($username);
-
-    // // Escape input before storing in the database
-    // $conn = getConnection();
-    // $username = escapeInput($conn, $username);
-
-    // // Use prepared statements to store in the database
-    // $stmt = $conn->prepare("INSERT INTO users (username) VALUES ($username)");
-    // $stmt->execute();
-    // $stmt->close();
-    // $conn->close();
+    // error handling of sql queries
 }
 
 ?>
@@ -34,12 +45,12 @@ if (!empty(array_filter($_POST))) {
 
     <form class="auth-form" id="register-form" action="/" method="POST">
         <div class="user-input-area user-input-area-register active" id="register-username">
-            <input class="text-input auth-item auth-item-medium" id="register-username-input" type="text" name="username" placeholder="Username" maxlength="16">
+            <input class="text-input auth-item auth-item-medium" id="register-username-input" type="text" name="username" placeholder="Username" maxlength="16" autocomplete="username">
             <button class="auth-item auth-btn button-register auth-item-medium" id="register-username-btn" type="button" disabled>Continue</button>
         </div>
 
         <div class="user-input-area user-input-area-register" id="register-email">
-            <input class="text-input auth-item auth-item-large" id="register-email-input" type="email" name="email" placeholder="Email">
+            <input class="text-input auth-item auth-item-large" id="register-email-input" type="email" name="email" placeholder="Email" autocomplete="email">
             <button class="auth-item auth-btn button-register auth-item-medium" id="register-email-btn" type="button" disabled>Continue</button>
         </div>
 
@@ -56,8 +67,8 @@ if (!empty(array_filter($_POST))) {
         </div>
 
         <div class="user-input-area user-input-area-register" id="register-full-name">
-            <input class="text-input auth-item auth-item-medium" id="register-given-name-input" type="text" name="given-name" placeholder="Given name(s)" maxlength="50">
-            <input class="text-input auth-item auth-item-medium" id="register-family-name-input" type="text" name="family-name" placeholder="Family name" maxlength="20">
+            <input class="text-input auth-item auth-item-medium" id="register-given-name-input" type="text" name="given-name" placeholder="Given name(s)" maxlength="50" autocomplete="given-name">
+            <input class="text-input auth-item auth-item-medium" id="register-family-name-input" type="text" name="family-name" placeholder="Family name" maxlength="20" autocomplete="family-name">
             <input class="auth-item auth-btn button-register auth-item-medium" id="register-full-name-btn" type="submit" value="Submit" disabled>
         </div>
 

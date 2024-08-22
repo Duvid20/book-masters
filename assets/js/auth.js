@@ -12,6 +12,42 @@ let currentLoginStep = 0;
 document.addEventListener("DOMContentLoaded", function () {
   console.log("auth.js DOMContentLoaded");
 
+  async function checkPasswordPwned(password) {
+    try {
+      const sha1 = new TextEncoder().encode(password);
+      const hashBuffer = await crypto.subtle.digest("SHA-1", sha1);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      const prefix = hashHex.slice(0, 5);
+      const suffix = hashHex.slice(5).toUpperCase();
+
+      const response = await fetch(
+        `https://api.pwnedpasswords.com/range/${prefix}`
+      );
+
+      if (!response.ok) {
+        // throw new Error(`Network response was not ok: ${response.statusText}`);
+        return -1;
+      }
+
+      const text = await response.text();
+      const lines = text.split("\n");
+
+      for (const line of lines) {
+        const [hashSuffix, count] = line.split(":");
+        if (hashSuffix === suffix) {
+          return parseInt(count, 10);
+        }
+      }
+
+      return 0;
+    } catch (error) {
+      return -1; // Indicate that the check failed
+    }
+  }
+
   function showUserInputMsg(inputAreaId, isError, msg, msgClass) {
     // input area
     const inputAreaDiv = document.getElementById(inputAreaId);
@@ -64,13 +100,19 @@ document.addEventListener("DOMContentLoaded", function () {
     msgContainerDiv.appendChild(msgDiv);
   }
 
-  function deleteUserInputMsg(inputAreaId, msgClass) {
+  function deleteUserInputMsgIfExists(inputAreaId, msgClass) {
     const inputAreaDiv = document.getElementById(inputAreaId);
     const msgContainerDiv = inputAreaDiv.querySelector(
       ".user-input-msg-container"
     );
-    const msgDiv = msgContainerDiv.querySelector(`.${msgClass}`);
-    msgDiv.remove();
+
+    if (msgContainerDiv) {
+      const msgDiv = msgContainerDiv.querySelector(`.${msgClass}`);
+
+      if (msgDiv) {
+        msgDiv.remove();
+      }
+    }
   }
 
   function checkIfInputAlreadyExists(
@@ -215,7 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!containsChars(value, chars)) {
       showUserInputMsg(
         inputAreaId,
-        true,
+        undefined,
         "Password must contain " + chars,
         msgClass
       );
@@ -307,6 +349,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const passwordMinimumLength = 14;
     const buttonElement = document.getElementById("register-password-btn");
     setDisabled(buttonElement, true);
+    deleteUserInputMsgIfExists("register-password", "password-pwned");
     let hasWrongLength = true;
 
     const isEmpty = isInputEmpty(
@@ -371,13 +414,48 @@ document.addEventListener("DOMContentLoaded", function () {
       );
 
       if (areValuesMatching) {
-        setDisabled(buttonElement, false);
+        const password = document.getElementById(
+          "register-password-input"
+        ).value;
+        buttonElement.innerHTML = "Checking...";
+
+        checkPasswordPwned(password).then((count) => {
+          if (count > 0) {
+            // password has been pwned
+            console.log(`Password has been pwned ${count} times`);
+            showUserInputMsg(
+              "register-password",
+              true,
+              `Password pwned ${count} times`,
+              "password-pwned"
+            );
+          } else if (count === 0) {
+            // password has not been pwned
+            showUserInputMsg(
+              "register-password",
+              false,
+              "Password is safe",
+              "password-pwned"
+            );
+            setDisabled(buttonElement, false);
+          } else {
+            // error occured when pwning (e.g. user offline)
+            showUserInputMsg(
+              "register-password",
+              false,
+              "Password is safe",
+              "password-pwned"
+            );
+            deleteUserInputMsgIfExists("register-password", "password-pwned");
+            setDisabled(buttonElement, false);
+          }
+          buttonElement.innerHTML = "Continue";
+        });
       }
     }
   }
 
   function checkFullNameInput() {
-    console.log("checkFullNameInput");
     const buttonElement = document.getElementById("register-full-name-btn");
     setDisabled(buttonElement, true);
 
@@ -395,26 +473,16 @@ document.addEventListener("DOMContentLoaded", function () {
       "is-family-name-correct"
     );
 
-    if (!isGivenNameEmpty) {
-      showUserInputMsg(
-        "register-given-name-input",
-        false,
-        "Beautiful given name!",
-        "is-given-name-correct"
-      );
-    }
-
     if (!isFamilyNameEmpty) {
-      showUserInputMsg(
-        "register-family-name-input",
-        false,
-        "Beautiful family name!",
+      deleteUserInputMsgIfExists(
+        "register-full-name",
         "is-family-name-correct"
       );
     }
 
-    console.log("isGivenNameEmpty", isGivenNameEmpty);
-    console.log("isFamilyNameEmpty", isFamilyNameEmpty);
+    if (!isGivenNameEmpty) {
+      deleteUserInputMsgIfExists("register-full-name", "is-given-name-correct");
+    }
 
     if (!isGivenNameEmpty && !isFamilyNameEmpty) {
       setDisabled(buttonElement, false);
@@ -484,6 +552,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const registerSubHeader = document.getElementById("register-sub-header");
 
+  // prevent spaces in password inputs
+  document
+    .querySelectorAll('input[type="password"]')
+    .forEach((passwordInput) => {
+      passwordInput.addEventListener("keypress", (e) => {
+        if (e.key === " ") {
+          e.preventDefault();
+        }
+      });
+    });
+
   // initial check
   checkUsernameInput();
   checkEmailInput();
@@ -495,17 +574,18 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", showNextRegisterStep);
   });
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === "ArrowRight") {
-      showNextRegisterStep();
-    }
-  });
+  // navigate with enter and arrow keys
+  // document.addEventListener("keydown", (e) => {
+  //   if (e.key === "Enter" || e.key === "ArrowRight") {
+  //     showNextRegisterStep();
+  //   }
+  // });
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowLeft") {
-      showPreviousRegisterStep();
-    }
-  });
+  // document.addEventListener("keydown", (e) => {
+  //   if (e.key === "ArrowLeft") {
+  //     showPreviousRegisterStep();
+  //   }
+  // });
 
   registerUsernameInput.addEventListener("input", checkUsernameInput);
   registerEmailInput.addEventListener("input", checkEmailInput);

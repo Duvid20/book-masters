@@ -4,9 +4,9 @@ CREATE TABLE `_users` (
   `family_name` varchar(30) NOT NULL,
   `username` varchar(16) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `is_admin` tinyint(1) NOT NULL,
-  `is_bookinator` tinyint(1) NOT NULL,
-  `points` int(9) NOT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
+  `is_bookinator` tinyint(1) NOT NULL DEFAULT 0,
+  `points` int(9) NOT NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -75,8 +75,8 @@ CREATE TABLE `_book_ratings` (
 CREATE TABLE `_emails` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
-  `is_primary` tinyint(1) NOT NULL,
-  `is_verified` tinyint(1) NOT NULL,
+  `is_primary` tinyint(1) NOT NULL DEFAULT 1,
+  `is_verified` tinyint(1) NOT NULL DEFAULT 0,
   `f_id_user` int(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   INDEX (`f_id_user`),
