@@ -24,10 +24,13 @@ if (!empty(array_filter($_POST))) {
 
         $sql = "INSERT INTO _emails (email, f_id_user) VALUES (?, ?)";
         $result = executeSQL($sql, [$email, $id]);
-        echo "Rows affected: " . $result;
-    } else {
-        //redirect to login page
-        redirect('includes/auth/login.php');
+
+        $_SESSION['username'] = $username;
+        $_SESSION['email'] = $email;
+        $_SESSION['to_login'] = true;
+
+        redirect('content.php');
+        exit();
     }
 
     // todo:
@@ -81,3 +84,10 @@ if (!empty(array_filter($_POST))) {
         Already have an account? Log in.
     </div>
 </div>
+
+<script src="assets/js/auth.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        initRegister();
+    });
+</script>
