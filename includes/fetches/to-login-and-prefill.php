@@ -1,8 +1,8 @@
 <?php
 
+session_start();
 require_once '../functions.php';
 require_once '../db.php';
-
 
 $_SESSION["to_login"] = true;
 
@@ -18,7 +18,3 @@ if (isset($_POST["email"])) {
     $email = sanitizeValue($_POST["email"]);
     $_SESSION["email"] = $email;
 }
-
-echo "PUBG";
-
-redirect("../../../index.php");

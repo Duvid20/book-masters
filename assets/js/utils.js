@@ -32,3 +32,7 @@ function sendEmail(to, subject, message) {
       console.error("Error:", error);
     });
 }
+
+function reloadPage() {
+  location.reload();
+}

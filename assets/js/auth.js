@@ -577,6 +577,8 @@ function initRegister() {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: `username=${username}&email=${email}`,
+    }).then(() => {
+      reloadPage();
     });
   });
 }

@@ -21,10 +21,8 @@ require_once 'includes/db.php';
 <div id="container">
 
     <?php
-
     require_once 'includes/content.php';
     require_once 'includes/nav.php';
-
     ?>
 
 </div>

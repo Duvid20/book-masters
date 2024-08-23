@@ -34,11 +34,10 @@ if (!empty(array_filter($_POST))) {
     }
 
     // todo:
-    // add link to login page if username/email is already in use and autofill username/email input
+    // when prefilling username or email, prefer the one that already exists
     // trigger continue button on enter-key press
-    // shorten input fields to max size as defined in db
-    // only allow continuze buttons triggering with keyboard keys if button is active
-    // error handling of sql queries
+    // only allow continue buttons triggering with keyboard keys if button is active
+    // error handling of sql queries: error page with error message
 }
 
 ?>
