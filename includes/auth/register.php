@@ -16,7 +16,7 @@ if (!empty(array_filter($_POST))) {
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         $sql = "INSERT INTO _users (given_name, family_name, username, password) VALUES (?, ?, ?, ?)";
-        $result = executeSQL($sql, [$givenName, $familyName, $username, $password]);
+        $result = executeSQL($sql, [$givenName, $familyName, $username, $hashedPassword]);
 
         $sql = "SELECT id FROM _users WHERE username = ?";
         $result = executeSQL($sql, [$username]);

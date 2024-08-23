@@ -3,7 +3,6 @@
 require_once '../functions.php';
 require_once '../db.php';
 
-file_put_contents('log.txt', "Script executed\n", FILE_APPEND);
 
 $_SESSION["to_login"] = true;
 
@@ -20,4 +19,6 @@ if (isset($_POST["email"])) {
     $_SESSION["email"] = $email;
 }
 
-redirect("/index.php");
+echo "PUBG";
+
+redirect("../../../index.php");
