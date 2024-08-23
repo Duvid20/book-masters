@@ -71,13 +71,20 @@
 }
 
 .user-input-area {
-  display: none;
   flex-direction: column;
   align-items: center;
   gap: 2px;
 }
 
-.user-input-area.active { 
+.user-input-area-register {
+  display: none;
+}
+
+.user-input-area-login {
+  display: flex;
+}
+
+.user-input-area.active {
   display: flex;
 }
 
@@ -130,4 +137,9 @@
 .auth-sub-header {
   font-size: medium;
   text-align: center;
+}
+
+.to-auth-page-btn {
+  color: rgb(97, 97, 97);
+  cursor: pointer;
 }

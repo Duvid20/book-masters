@@ -29,7 +29,7 @@ if (!empty(array_filter($_POST))) {
         $_SESSION['email'] = $email;
         $_SESSION['to_login'] = true;
 
-        redirect('content.php');
+        redirect('index.php');
         exit();
     }
 
@@ -81,7 +81,7 @@ if (!empty(array_filter($_POST))) {
     </form>
 
     <div class="account-message">
-        Already have an account? Log in.
+        Already have an account? <span class="to-auth-page-btn" id="to-login-btn">Log in.</span>
     </div>
 </div>
 

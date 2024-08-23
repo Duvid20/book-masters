@@ -7,7 +7,8 @@ let buttonsRegister,
   registerPasswordConfirmInput,
   registerGivenNameInput,
   registerFamilyNameInput,
-  registerSubHeader;
+  registerSubHeader,
+  toLoginButton;
 
 let currentRegisterStep = 0;
 const registerSubHeaderTexts = [
@@ -130,7 +131,7 @@ function checkIfInputAlreadyExists(
   const inputFieldElement = document.getElementById(inputFieldElementId);
   const value = inputFieldElement.value.trim();
 
-  fetch(url, {
+  return fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -288,18 +289,18 @@ function checkUsernameInput() {
     );
 
     if (!hasWrongLength) {
-      let inputAlreadyExists = checkIfInputAlreadyExists(
+      checkIfInputAlreadyExists(
         "username",
         "Username",
         "register-username-input",
         "/includes/fetches/check-username.php",
         "register-username",
         "is-username-available"
-      );
-
-      if (!inputAlreadyExists) {
-        setDisabled(buttonElement, false);
-      }
+      ).then((inputAlreadyExists) => {
+        if (!inputAlreadyExists) {
+          setDisabled(buttonElement, false);
+        }
+      });
     }
   }
 }
@@ -323,18 +324,18 @@ function checkEmailInput() {
     );
 
     if (!hasWrongFormat) {
-      let inputAlreadyExists = checkIfInputAlreadyExists(
+      checkIfInputAlreadyExists(
         "email",
         "Email",
         "register-email-input",
         "/includes/fetches/check-email.php",
         "register-email",
         "is-email-available"
-      );
-
-      if (!inputAlreadyExists) {
-        setDisabled(buttonElement, false);
-      }
+      ).then((inputAlreadyExists) => {
+        if (!inputAlreadyExists) {
+          setDisabled(buttonElement, false);
+        }
+      });
     }
   }
 }
@@ -385,7 +386,7 @@ function checkPasswordInput() {
   );
 
   const containsSpecialChars = checkValueContainsChars(
-    "@$!%*?&",
+    "@$§%*&/!?~\\-_.,+#()\\[\\]{}",
     "register-password-input",
     "register-password",
     "password-special-chars"
@@ -514,6 +515,13 @@ function showPreviousRegisterStep() {
   }
 }
 
+function checkAllRegisterInputs() {
+  checkUsernameInput();
+  checkEmailInput();
+  checkPasswordInput();
+  checkFullNameInput();
+}
+
 function initRegister() {
   // init dom elements
   buttonsRegister = document.querySelectorAll(".button-register");
@@ -536,11 +544,10 @@ function initRegister() {
 
   registerSubHeader = document.getElementById("register-sub-header");
 
+  toLoginButton = document.getElementById("to-login-btn");
+
   // initial check
-  checkUsernameInput();
-  checkEmailInput();
-  checkPasswordInput();
-  checkFullNameInput();
+  checkAllRegisterInputs();
 
   // event listeners
   buttonsRegister.forEach((button) => {
@@ -554,7 +561,24 @@ function initRegister() {
   registerGivenNameInput.addEventListener("input", checkFullNameInput);
   registerFamilyNameInput.addEventListener("input", checkFullNameInput);
 
-  registerBackButton.addEventListener("click", showPreviousRegisterStep);
+  registerBackButton.addEventListener("click", () => {
+    showPreviousRegisterStep();
+    checkAllRegisterInputs();
+  });
+
+  toLoginButton.addEventListener("click", () => {
+    console.log("to login");
+    const username = registerUsernameInput.value;
+    const email = registerEmailInput.value;
+
+    fetch("includes/fetches/to-login-and-prefill.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `username=${username}&email=${email}`,
+    });
+  });
 }
 
 document.addEventListener("DOMContentLoaded", function () {
