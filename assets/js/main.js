@@ -1,5 +1,4 @@
 window.addEventListener("DOMContentLoaded", function () {
-  console.log("main.js DOMContentLoaded");
   console.log("online:", this.navigator.onLine);
 
   // check if online with eventlistener

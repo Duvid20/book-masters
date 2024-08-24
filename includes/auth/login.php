@@ -2,9 +2,9 @@
 
 $_SESSION['to_login'] = false;
 
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['username']) && $_SESSION['username'] != "") {
     $usernameOrEmail = $_SESSION['username'];
-} else if (isset($_SESSION['email'])) {
+} else if (isset($_SESSION['email']) && $_SESSION['email'] != "") {
     $usernameOrEmail = $_SESSION['email'];
 }
 
@@ -68,7 +68,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                 placeholder="Username or email"
                 maxlength="50"
                 autocomplete="email"
-                value="<?php if ($usernameOrEmail) {
+                value="<?php if (isset($usernameOrEmail)) {
                             echo $usernameOrEmail;
                         } ?>">
             <input

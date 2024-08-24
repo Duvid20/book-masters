@@ -490,8 +490,8 @@ function checkFullNameInputRegister() {
 
 function showNextRegisterStep() {
   if (currentRegisterStep < userInputAreasRegister.length - 1) {
-    checkUsernameInput();
-    checkEmailInput();
+    checkUsernameInputRegister();
+    checkEmailInputRegister();
 
     userInputAreasRegister[currentRegisterStep].classList.remove("active");
     currentRegisterStep++;

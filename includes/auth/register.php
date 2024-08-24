@@ -2,11 +2,11 @@
 
 $_SESSION['to_register'] = false;
 
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['username']) && $_SESSION['username'] != "") {
     $username = $_SESSION['username'];
 }
 
-if (isset($_SESSION['email'])) {
+if (isset($_SESSION['email']) && $_SESSION['email'] != "") {
     $email = $_SESSION['email'];
 }
 
@@ -64,7 +64,7 @@ if (!empty(array_filter($_POST))) {
                 placeholder="Username"
                 maxlength="16"
                 autocomplete="username"
-                value="<?php if ($username) {
+                value="<?php if (isset($username)) {
                             echo $username;
                         } ?>">
             <button
@@ -85,7 +85,7 @@ if (!empty(array_filter($_POST))) {
                 placeholder="Email"
                 maxlength="50"
                 autocomplete="email"
-                value="<?php if ($email) {
+                value="<?php if (isset($email)) {
                             echo $email;
                         } ?>">
             <button
@@ -155,7 +155,7 @@ if (!empty(array_filter($_POST))) {
                 class="auth-item auth-btn button-register auth-item-medium"
                 id="register-full-name-btn"
                 type="submit"
-                value="Submit"
+                value="Create account"
                 disabled>
         </div>
 
