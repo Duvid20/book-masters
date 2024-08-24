@@ -20,3 +20,8 @@ function isCsrfTokenValid()
 {
     return isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token'];
 }
+
+function reloadPage()
+{
+    echo "<script>reloadPage()</script>";
+}

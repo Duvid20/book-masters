@@ -13,13 +13,15 @@ if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
     $usernameOrEmail = sanitizeValue($_POST["usernameOrEmail"]);
     $password = sanitizeValue($_POST["password"]);
 
-    // Check if the user exists by username
+    $matchWithEmail = false;
+
+    // check if user exists by username
     $sql = "SELECT id, password FROM _users WHERE username = ?";
     $result = executeSQL($sql, [$usernameOrEmail]);
     $matchWithUsername = isset($result[0]["id"]);
     $hashedPassword = $matchWithUsername ? $result[0]["password"] : null;
 
-    // Check if the user exists by email
+    // check if user exists by email
     if (!$matchWithUsername) {
         $sql = "SELECT _users.id, _users.password
                 FROM _users 
@@ -30,15 +32,30 @@ if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
         $hashedPassword = $matchWithEmail ? $result[0]["password"] : null;
     }
 
-    // Verify the password
-    // if (($matchWithUsername || $matchWithEmail) && password_verify($password, $hashedPassword)) {
-    if (true) {
+    // verify password
+    if (($matchWithUsername || $matchWithEmail) && password_verify($password, $hashedPassword)) {
         $_SESSION["logged_in"] = true;
         $_SESSION["user_id"] = $result[0]["id"];
-        redirect("/");
+    } else if ($matchWithUsername || $matchWithEmail) {
+        echo "Invalid username or email: ", $usernameOrEmail, "<br>";
+        // $_SESSION["wrong_credentials"] = true;
+    } else if (password_verify($password, $hashedPassword)) {
+        echo "Invalid password.", $password;
+        // $_SESSION["wrong_credentials"] = true;
     } else {
-        $_SESSION["wrong_credentials"] = true;
+        echo "Other login error";
+        // $_SESSION["wrong_credentials"] = true;
     }
+
+    // $_SESSION["matchWithUsername"] = $matchWithUsername;
+    // $_SESSION["matchWithEmail"] = $matchWithEmail;
+    // $_SESSION["hashedPassword"] = $hashedPassword;
+    // $_SESSION["password"] = $password;
+    // $_SESSION["usernameOrEmail"] = $usernameOrEmail;
+    // $_SESSION["result"] = $result;
+
+    var_dump($_SESSION);
+    // reloadPage();
 }
 ?>
 
