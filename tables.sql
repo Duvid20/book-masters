@@ -74,7 +74,7 @@ CREATE TABLE `_book_ratings` (
 
 CREATE TABLE `_emails` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) NOT NULL,
+  `email` varchar(50) NOT NULL,
   `is_primary` tinyint(1) NOT NULL DEFAULT 1,
   `is_verified` tinyint(1) NOT NULL DEFAULT 0,
   `f_id_user` int(10) UNSIGNED NOT NULL,

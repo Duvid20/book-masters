@@ -1,5 +1,15 @@
 <?php
 
+$_SESSION['to_register'] = false;
+
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+}
+
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
+}
+
 if (!empty(array_filter($_POST))) {
     // var_dump($_POST);
 
@@ -47,40 +57,125 @@ if (!empty(array_filter($_POST))) {
 
     <form class="auth-form" id="register-form" action="/" method="POST">
         <div class="user-input-area user-input-area-register active" id="register-username">
-            <input class="text-input auth-item auth-item-medium" id="register-username-input" type="text" name="username" placeholder="Username" maxlength="16" autocomplete="username">
-            <button class="auth-item auth-btn button-register auth-item-medium" id="register-username-btn" type="button" disabled>Continue</button>
+            <input
+                class="text-input auth-item auth-item-medium"
+                id="register-username-input"
+                type="text" name="username"
+                placeholder="Username"
+                maxlength="16"
+                autocomplete="username"
+                value="<?php if ($username) {
+                            echo $username;
+                        } ?>">
+            <button
+                class="auth-item auth-btn button-register auth-item-medium"
+                id="register-username-btn"
+                type="button"
+                disabled>
+                Continue
+            </button>
         </div>
 
         <div class="user-input-area user-input-area-register" id="register-email">
-            <input class="text-input auth-item auth-item-large" id="register-email-input" type="email" name="email" placeholder="Email" autocomplete="email">
-            <button class="auth-item auth-btn button-register auth-item-medium" id="register-email-btn" type="button" disabled>Continue</button>
+            <input
+                class="text-input auth-item auth-item-large"
+                id="register-email-input"
+                type="email"
+                name="email"
+                placeholder="Email"
+                maxlength="50"
+                autocomplete="email"
+                value="<?php if ($email) {
+                            echo $email;
+                        } ?>">
+            <button
+                class="auth-item auth-btn button-register auth-item-medium"
+                id="register-email-btn"
+                type="button"
+                disabled>
+                Continue
+            </button>
         </div>
 
         <div class="user-input-area user-input-area-register" id="verify-email">
-            <button class="auth-item auth-btn auth-item-medium" id="send-verif-code-btn" type="button">Send Code</button>
-            <input class="text-input auth-item auth-item-medium" id="verif-code-input" type="text" name="verif-code" placeholder="Code from Email">
-            <button class="auth-item auth-btn button-register auth-item-medium" id="verify-email-btn" type="button">Continue/Skip</button>
+            <button
+                class="auth-item auth-btn auth-item-medium"
+                id="send-verif-code-btn"
+                type="button">
+                Send Code
+            </button>
+            <input
+                class="text-input auth-item auth-item-medium"
+                id="verif-code-input"
+                type="text"
+                name="verif-code"
+                placeholder="Code from Email">
+            <button
+                class="auth-item auth-btn button-register auth-item-medium"
+                id="verify-email-btn"
+                type="button">
+                Continue/Skip
+            </button>
         </div>
 
         <div class="user-input-area user-input-area-register" id="register-password">
-            <input class="text-input auth-item auth-item-medium" id="register-password-input" type="password" name="password" placeholder="Password" maxlength="20">
-            <input class="text-input auth-item auth-item-medium" id="register-password-confirm-input" type="password" name="password-confirm" placeholder="Confirm password" maxlength="20">
-            <button class="auth-item auth-btn button-register auth-item-medium" id="register-password-btn" type="button" disabled>Continue</button>
+            <input
+                class="text-input auth-item auth-item-medium"
+                id="register-password-input"
+                type="password" n
+                ame="password"
+                placeholder="Password"
+                maxlength="20">
+            <input
+                class="text-input auth-item auth-item-medium"
+                id="register-password-confirm-input"
+                type="password"
+                name="password-confirm"
+                placeholder="Confirm password"
+                maxlength="20">
+            <button class="auth-item auth-btn button-register auth-item-medium"
+                id="register-password-btn"
+                type="button"
+                disabled>
+                Continue
+            </button>
         </div>
 
         <div class="user-input-area user-input-area-register" id="register-full-name">
-            <input class="text-input auth-item auth-item-medium" id="register-given-name-input" type="text" name="given-name" placeholder="Given name(s)" maxlength="50" autocomplete="given-name">
-            <input class="text-input auth-item auth-item-medium" id="register-family-name-input" type="text" name="family-name" placeholder="Family name" maxlength="20" autocomplete="family-name">
-            <input class="auth-item auth-btn button-register auth-item-medium" id="register-full-name-btn" type="submit" value="Submit" disabled>
+            <input
+                class="text-input auth-item auth-item-medium"
+                id="register-given-name-input"
+                type="text"
+                name="given-name"
+                placeholder="Given name(s)"
+                maxlength="50"
+                autocomplete="given-name">
+            <input class="text-input auth-item auth-item-medium"
+                id="register-family-name-input"
+                type="text"
+                name="family-name"
+                placeholder="Family name"
+                maxlength="20"
+                autocomplete="family-name">
+            <input
+                class="auth-item auth-btn button-register auth-item-medium"
+                id="register-full-name-btn"
+                type="submit"
+                value="Submit"
+                disabled>
         </div>
 
-        <button class="auth-item auth-btn auth-back-btn auth-item-medium" id="register-back-btn" type="button" title="Back">
+        <button
+            class="auth-item auth-btn auth-back-btn auth-item-medium"
+            id="register-back-btn"
+            type="button"
+            title="Back">
             <i class="fas fa-arrow-left"></i>
         </button>
     </form>
 
     <div class="account-message">
-        Already have an account? <span class="to-auth-page-btn" id="to-login-btn">Log in.</span>
+        Already have an account? <span class="to-auth-page-btn" id="to-login-btn">Log in here</span>
     </div>
 </div>
 

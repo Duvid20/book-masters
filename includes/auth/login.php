@@ -11,10 +11,15 @@ if (isset($_SESSION['username'])) {
 if (isset($_POST['username']) && isset($_POST['password'])) {
     $usernameOrPassword = sanitizeValue($_POST['usernameOrEmail']);
     $password = sanitizeValue($_POST['password']);
+    $password = password_verify($password, PASSWORD_DEFAULT);
+
+    echo "usernameOrEmail: ", $usernameOrEmail;
+    echo "password: ", $password;
 
     $sql = "SELECT id FROM _users WHERE username = ? AND password = ?";
     $result = executeSQL($sql, [$usernameOrEmail, $password]);
     $matchWithUsername = isset($result[0]['id']);
+
     echo "matchWithUsername: ", $matchWithUsername;
 
     $sql =
@@ -24,6 +29,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
         WHERE _users.password = ? AND _emails.email = ? AND _emails.is_verified = 1";
     $result = executeSQL($sql, [$password, $usernameOrEmail]);
     $matchWithEmail = isset($result[0]['id']);
+
     echo "matchWithEmail: ", $matchWithEmail;
 
     // $sql = "SELECT email FROM _emails WHERE email = ? AND ";
@@ -53,36 +59,43 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
     <div class="auth-sub-header">Enter your credencials</div>
 
     <form class="auth-form" id="login-form" action="/" method="POST">
-        <div class="user-input-area">
+        <div class="user-input-area user-input-area-login">
             <input
                 class="text-input auth-item auth-item-medium"
                 id="login-username-or-email-input"
                 type="text"
                 name="usernameOrEmail"
                 placeholder="Username or email"
+                maxlength="50"
                 autocomplete="email"
                 value="<?php if ($usernameOrEmail) {
                             echo $usernameOrEmail;
                         } ?>">
-            <input class="text-input auth-item auth-item-medium" id="login-password-input" type="password" name="password" placeholder="Password" maxlength="20">
+            <input
+                class="text-input auth-item auth-item-medium"
+                id="login-password-input"
+                type="password"
+                name="password"
+                placeholder="Password"
+                maxlength="20">
         </div>
 
         <input
             class="auth-item auth-btn button-register auth-item-medium"
-            id="register-full-name-btn"
+            id="login-btn"
             type="submit"
             value="Submit"
             disabled>
     </form>
 
     <div class="account-message">
-        New to Book Masters? <span class="to-auth-page-btn" id="to-register-btn">Register.</span>
+        New to Book Masters? <span class="to-auth-page-btn" id="to-register-btn">Register here</span>
     </div>
 </div>
 
 <script src="assets/js/auth.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // initLogin();
+        initLogin();
     });
 </script>

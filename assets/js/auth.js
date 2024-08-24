@@ -10,6 +10,11 @@ let buttonsRegister,
   registerSubHeader,
   toLoginButton;
 
+let loginUsernameOrEmailInput,
+  loginPasswordInput,
+  loginButton,
+  toRegisterButton;
+
 let currentRegisterStep = 0;
 const registerSubHeaderTexts = [
   "Choose your username",
@@ -182,15 +187,19 @@ function checkHasInputWrongLength(
 }
 
 function checkEmailFormat(inputFieldElementId, inputAreaId, msgClass) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const inputFieldElement = document.getElementById(inputFieldElementId);
   const value = inputFieldElement.value.trim();
 
-  if (!emailRegex.test(value)) {
+  if (!isEmailValid(value)) {
     showUserInputMsg(inputAreaId, true, "Email must be right format", msgClass);
     return true;
   }
   return false;
+}
+
+function isEmailValid(email) {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
 }
 
 function isInputEmpty(nameString, inputFieldElementId, inputAreaId, msgClass) {
@@ -583,12 +592,42 @@ function initRegister() {
   });
 }
 
+function initLogin() {
+  console.log("init login");
+
+  loginUsernameOrEmailInput = document.getElementById(
+    "login-username-or-email-input"
+  );
+  loginPasswordInput = document.getElementById("login-password-input");
+  loginButton = document.getElementById("login-btn");
+  toRegisterButton = document.getElementById("to-register-btn");
+
+  toRegisterButton.addEventListener("click", () => {
+    console.log("to register");
+    const usernameOrEmail = loginUsernameOrEmailInput.value;
+
+    const postBody = isEmailValid(usernameOrEmail)
+      ? `email=${usernameOrEmail}`
+      : `username=${usernameOrEmail}`;
+
+    fetch("includes/fetches/to-register-and-prefill.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: postBody,
+    }).then(() => {
+      reloadPage();
+    });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-  // prevent spaces in password inputs
+  // prevent spaces in password and email inputs
   document
-    .querySelectorAll('input[type="password"]')
-    .forEach((passwordInput) => {
-      passwordInput.addEventListener("keypress", (e) => {
+    .querySelectorAll('input[type="password"], input[type="email"]')
+    .forEach((input) => {
+      input.addEventListener("keypress", (e) => {
         if (e.key === " ") {
           e.preventDefault();
         }
