@@ -1,57 +1,45 @@
 <?php
 
-$_SESSION['to_login'] = false;
+$_SESSION["to_login"] = false;
 
-if (isset($_SESSION['username']) && $_SESSION['username'] != "") {
-    $usernameOrEmail = $_SESSION['username'];
-} else if (isset($_SESSION['email']) && $_SESSION['email'] != "") {
-    $usernameOrEmail = $_SESSION['email'];
+$usernameOrEmail = "";
+if (isset($_SESSION["username"]) && $_SESSION["username"] != "") {
+    $usernameOrEmail = $_SESSION["username"];
+} else if (isset($_SESSION["email"]) && $_SESSION["email"] != "") {
+    $usernameOrEmail = $_SESSION["email"];
 }
 
-if (isset($_POST['username']) && isset($_POST['password'])) {
-    $usernameOrPassword = sanitizeValue($_POST['usernameOrEmail']);
-    $password = sanitizeValue($_POST['password']);
-    $password = password_verify($password, PASSWORD_DEFAULT);
+if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
+    $usernameOrEmail = sanitizeValue($_POST["usernameOrEmail"]);
+    $password = sanitizeValue($_POST["password"]);
 
-    echo "usernameOrEmail: ", $usernameOrEmail;
-    echo "password: ", $password;
+    // Check if the user exists by username
+    $sql = "SELECT id, password FROM _users WHERE username = ?";
+    $result = executeSQL($sql, [$usernameOrEmail]);
+    $matchWithUsername = isset($result[0]["id"]);
+    $hashedPassword = $matchWithUsername ? $result[0]["password"] : null;
 
-    $sql = "SELECT id FROM _users WHERE username = ? AND password = ?";
-    $result = executeSQL($sql, [$usernameOrEmail, $password]);
-    $matchWithUsername = isset($result[0]['id']);
+    // Check if the user exists by email
+    if (!$matchWithUsername) {
+        $sql = "SELECT _users.id, _users.password
+                FROM _users 
+                INNER JOIN _emails ON _users.id = _emails.f_id_user
+                WHERE _emails.email = ? AND _emails.is_verified = 1";
+        $result = executeSQL($sql, [$usernameOrEmail]);
+        $matchWithEmail = isset($result[0]["id"]);
+        $hashedPassword = $matchWithEmail ? $result[0]["password"] : null;
+    }
 
-    echo "matchWithUsername: ", $matchWithUsername;
-
-    $sql =
-        "SELECT _users.id
-        FROM _users 
-        INNER JOIN _emails ON _users.id = _emails.f_id_user
-        WHERE _users.password = ? AND _emails.email = ? AND _emails.is_verified = 1";
-    $result = executeSQL($sql, [$password, $usernameOrEmail]);
-    $matchWithEmail = isset($result[0]['id']);
-
-    echo "matchWithEmail: ", $matchWithEmail;
-
-    // $sql = "SELECT email FROM _emails WHERE email = ? AND ";
-
-    // if ($user) {
-    //     if (password_verify($password, $user['password'])) {
-    //         $_SESSION['logged_in'] = true;
-    //         $_SESSION['user_id'] = $user['id'];
-    //         $_SESSION['username'] = $user['username'];
-    //         $_SESSION['email'] = $user['email'];
-    //         $_SESSION['given_name'] = $user['given_name'];
-    //         $_SESSION['family_name'] = $user['given_name'];
-
-    //         redirect("index.php");
-    //     } else {
-    //         echo "<script>alert('Invalid password.')</script>";
-    //     }
-    // } else {
-    //     echo "<script>alert('Invalid username.')</script>";
-    // }
+    // Verify the password
+    // if (($matchWithUsername || $matchWithEmail) && password_verify($password, $hashedPassword)) {
+    if (true) {
+        $_SESSION["logged_in"] = true;
+        $_SESSION["user_id"] = $result[0]["id"];
+        redirect("/");
+    } else {
+        $_SESSION["wrong_credentials"] = true;
+    }
 }
-
 ?>
 
 <div class="auth-page-container">

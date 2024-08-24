@@ -1,6 +1,8 @@
 <?php
 
 $_SESSION['to_register'] = false;
+$username;
+$email;
 
 if (isset($_SESSION['username']) && $_SESSION['username'] != "") {
     $username = $_SESSION['username'];
@@ -10,23 +12,29 @@ if (isset($_SESSION['email']) && $_SESSION['email'] != "") {
     $email = $_SESSION['email'];
 }
 
-if (!empty(array_filter($_POST))) {
+if (
+    isset($_POST['username']) &&
+    isset($_POST['email']) &&
+    isset($_POST['password']) &&
+    isset($_POST['given-name']) &&
+    isset($_POST['family-name'])
+) {
     // var_dump($_POST);
 
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
     $givenName = $_POST['given-name'];
     $familyName = $_POST['family-name'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $email = $_POST['email'];
 
     $isUsernameInUse = isUsernameInUse($username);
     $isEmailInUse = isEmailInUse($email);
 
     if (!$isUsernameInUse && !$isEmailInUse) {
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $password = password_hash($password, PASSWORD_BCRYPT);
 
         $sql = "INSERT INTO _users (given_name, family_name, username, password) VALUES (?, ?, ?, ?)";
-        $result = executeSQL($sql, [$givenName, $familyName, $username, $hashedPassword]);
+        $result = executeSQL($sql, [$givenName, $familyName, $username, $password]);
 
         $sql = "SELECT id FROM _users WHERE username = ?";
         $result = executeSQL($sql, [$username]);

@@ -507,8 +507,8 @@ function showNextRegisterStep() {
 
 function showPreviousRegisterStep() {
   if (currentRegisterStep > 0) {
-    checkUsernameInput();
-    checkEmailInput();
+    checkUsernameInputRegister();
+    checkEmailInputRegister();
 
     userInputAreasRegister[currentRegisterStep].classList.remove("active");
     currentRegisterStep--;
