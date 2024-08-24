@@ -59,7 +59,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
     <div class="auth-sub-header">Enter your credencials</div>
 
     <form class="auth-form" id="login-form" action="/" method="POST">
-        <div class="user-input-area user-input-area-login">
+        <div class="user-input-area user-input-area-login" id="login-username-email-password">
             <input
                 class="text-input auth-item auth-item-medium"
                 id="login-username-or-email-input"
@@ -84,7 +84,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
             class="auth-item auth-btn button-register auth-item-medium"
             id="login-btn"
             type="submit"
-            value="Submit"
+            value="Log in"
             disabled>
     </form>
 

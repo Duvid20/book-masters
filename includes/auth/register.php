@@ -98,12 +98,6 @@ if (!empty(array_filter($_POST))) {
         </div>
 
         <div class="user-input-area user-input-area-register" id="verify-email">
-            <button
-                class="auth-item auth-btn auth-item-medium"
-                id="send-verif-code-btn"
-                type="button">
-                Send Code
-            </button>
             <input
                 class="text-input auth-item auth-item-medium"
                 id="verif-code-input"

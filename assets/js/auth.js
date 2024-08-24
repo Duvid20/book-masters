@@ -277,7 +277,7 @@ function checkValueContainsChars(
   }
 }
 
-function checkUsernameInput() {
+function checkUsernameInputRegister() {
   const buttonElement = document.getElementById("register-username-btn");
   setDisabled(buttonElement, true);
 
@@ -314,7 +314,7 @@ function checkUsernameInput() {
   }
 }
 
-function checkEmailInput() {
+function checkEmailInputRegister() {
   const buttonElement = document.getElementById("register-email-btn");
   setDisabled(buttonElement, true);
 
@@ -349,7 +349,7 @@ function checkEmailInput() {
   }
 }
 
-function checkPasswordInput() {
+function checkPasswordInputRegister() {
   const passwordMinimumLength = 14;
   const buttonElement = document.getElementById("register-password-btn");
   setDisabled(buttonElement, true);
@@ -457,7 +457,7 @@ function checkPasswordInput() {
   }
 }
 
-function checkFullNameInput() {
+function checkFullNameInputRegister() {
   const buttonElement = document.getElementById("register-full-name-btn");
   setDisabled(buttonElement, true);
 
@@ -525,10 +525,55 @@ function showPreviousRegisterStep() {
 }
 
 function checkAllRegisterInputs() {
-  checkUsernameInput();
-  checkEmailInput();
-  checkPasswordInput();
-  checkFullNameInput();
+  checkUsernameInputRegister();
+  checkEmailInputRegister();
+  checkPasswordInputRegister();
+  checkFullNameInputRegister();
+}
+
+function checkUsernameOrEmailInputLogin() {
+  const buttonElement = document.getElementById("login-btn");
+  setDisabled(buttonElement, true);
+
+  const isEmpty = isInputEmpty(
+    "username or email",
+    "login-username-or-email-input",
+    "login-username-email-password",
+    "is-username-or-email-correct"
+  );
+
+  if (!isEmpty) {
+    deleteUserInputMsgIfExists(
+      "login-username-email-password",
+      "is-username-or-email-correct"
+    );
+    setDisabled(buttonElement, false);
+  }
+}
+
+function checkPasswordInputLogin() {
+  const buttonElement = document.getElementById("login-btn");
+  setDisabled(buttonElement, true);
+
+  const isEmpty = isInputEmpty(
+    "password",
+    "login-password-input",
+    "login-username-email-password",
+    "is-password-correct"
+  );
+
+  if (!isEmpty) {
+    deleteUserInputMsgIfExists(
+      "login-username-email-password",
+      "is-password-correct"
+    );
+    setDisabled(buttonElement, false);
+  }
+}
+
+function checkAllLoginInputs() {
+  checkUsernameOrEmailInputLogin();
+  checkPasswordInputLogin();
 }
 
 function initRegister() {
@@ -563,18 +608,22 @@ function initRegister() {
     button.addEventListener("click", showNextRegisterStep);
   });
 
-  registerUsernameInput.addEventListener("input", checkUsernameInput);
-  registerEmailInput.addEventListener("input", checkEmailInput);
-  registerPasswordInput.addEventListener("input", checkPasswordInput);
-  registerPasswordConfirmInput.addEventListener("input", checkPasswordInput);
-  registerGivenNameInput.addEventListener("input", checkFullNameInput);
-  registerFamilyNameInput.addEventListener("input", checkFullNameInput);
+  registerUsernameInput.addEventListener("input", checkUsernameInputRegister);
+  registerEmailInput.addEventListener("input", checkEmailInputRegister);
+  registerPasswordInput.addEventListener("input", checkPasswordInputRegister);
+  registerPasswordConfirmInput.addEventListener(
+    "input",
+    checkPasswordInputRegister
+  );
+  registerGivenNameInput.addEventListener("input", checkFullNameInputRegister);
+  registerFamilyNameInput.addEventListener("input", checkFullNameInputRegister);
 
   registerBackButton.addEventListener("click", () => {
     showPreviousRegisterStep();
     checkAllRegisterInputs();
   });
 
+  // redirect to login page and prefill
   toLoginButton.addEventListener("click", () => {
     console.log("to login");
     const username = registerUsernameInput.value;
@@ -593,8 +642,7 @@ function initRegister() {
 }
 
 function initLogin() {
-  console.log("init login");
-
+  // init dom elements
   loginUsernameOrEmailInput = document.getElementById(
     "login-username-or-email-input"
   );
@@ -602,10 +650,19 @@ function initLogin() {
   loginButton = document.getElementById("login-btn");
   toRegisterButton = document.getElementById("to-register-btn");
 
-  toRegisterButton.addEventListener("click", () => {
-    console.log("to register");
-    const usernameOrEmail = loginUsernameOrEmailInput.value;
+  // initial check
+  checkAllLoginInputs();
 
+  // event listeners
+  loginUsernameOrEmailInput.addEventListener(
+    "input",
+    checkUsernameOrEmailInputLogin
+  );
+  loginPasswordInput.addEventListener("input", checkPasswordInputLogin);
+
+  // redirect to register page and prefill
+  toRegisterButton.addEventListener("click", () => {
+    const usernameOrEmail = loginUsernameOrEmailInput.value;
     const postBody = isEmailValid(usernameOrEmail)
       ? `email=${usernameOrEmail}`
       : `username=${usernameOrEmail}`;
