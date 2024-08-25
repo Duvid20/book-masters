@@ -34,36 +34,14 @@ if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
     }
 
     $passwordsMatch = password_verify($plainPassword, $hashedPassword);
-    // $passwordsMatch = true;
-
-    if ($passwordsMatch) {
-        echo "passwords match";
-    } else {
-        echo "passwords do not match";
-    }
 
     // verify password
     if (($matchWithUsername || $matchWithEmail) && $passwordsMatch) {
         $_SESSION["logged_in"] = true;
         $_SESSION["user_id"] = $result[0]["id"];
     } else {
-        echo "Invalid username or email: ", $usernameOrEmail, "<br>";
         $_SESSION["login_failed"] = true;
     }
-
-    // Debugging output
-    echo '<pre>';
-    echo 'Username or Email: ', $usernameOrEmail, "\n";
-    echo 'Plain password: ', $plainPassword, "\n";
-    echo 'Match with Username: ', $matchWithUsername ? 'true' : 'false', "\n";
-    echo 'Match with Email: ', $matchWithEmail ? 'true' : 'false', "\n";
-    echo 'Hashed Password: ', $hashedPassword, "\n";
-    echo 'Result: ', print_r($result, true), "\n";
-    echo 'Session: ', print_r($_SESSION, true), "\n";
-    echo '</pre>';
-
-    // TEST
-    // $_SESSION["logged_in"] = true;
 
     reloadPage();
     exit();

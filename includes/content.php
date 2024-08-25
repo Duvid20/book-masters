@@ -20,21 +20,6 @@
         echo "<script>alert('Default redirect to register.')</script>";
         require_once 'includes/auth/register.php';
     }
-
-    if (isset($_SESSION['logged_in'])) {
-        if ($_SESSION['logged_in'] == true) {
-            echo "Session logged_in set to: true";
-        } else {
-            echo "Session logged_in set to: false";
-        }
-    } else {
-        echo "Session logged_in not set";
-    }
-
-    // Debugging output
-    echo '<pre>';
-    print_r($_SESSION);
-    echo '</pre>';
-
+    
     ?>
 </div>
