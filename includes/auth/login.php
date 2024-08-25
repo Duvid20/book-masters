@@ -35,7 +35,7 @@ if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
 
     $passwordsMatch = password_verify($plainPassword, $hashedPassword);
 
-    // verify password
+    // if user exists and passwords match, log in user
     if (($matchWithUsername || $matchWithEmail) && $passwordsMatch) {
         $_SESSION["logged_in"] = true;
         $_SESSION["user_id"] = $result[0]["id"];
@@ -44,7 +44,6 @@ if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
     }
 
     reloadPage();
-    exit();
 }
 
 ?>

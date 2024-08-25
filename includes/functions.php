@@ -23,7 +23,8 @@ function isCsrfTokenValid()
 
 function reloadPage()
 {
-    echo "<script>location.reload();</script>";
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit();
 }
 
 function checkIfSessionVariableTrue($variable)

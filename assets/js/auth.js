@@ -9,12 +9,10 @@ let buttonsRegister,
   registerFamilyNameInput,
   registerSubHeader,
   toLoginButton;
-
 let loginUsernameOrEmailInput,
   loginPasswordInput,
   loginButton,
   toRegisterButton;
-
 let currentRegisterStep = 0;
 const registerSubHeaderTexts = [
   "Choose your username",
@@ -93,7 +91,7 @@ function showUserInputMsg(inputAreaId, isError, msg, msgClass) {
   switch (isError) {
     case undefined:
       msgDiv.classList.add("user-input-msg-neutral");
-      msgIconDiv.innerHTML = "i";
+      msgIconDiv.innerHTML = "◇";
       break;
     case true:
       msgDiv.classList.add("user-input-msg-error");
