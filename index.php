@@ -15,6 +15,7 @@ require_once 'includes/db.php';
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/nav.css">
     <link rel="stylesheet" href="assets/css/auth.css">
+    <link rel="stylesheet" href="assets/css/page.css">
     <title>Book Masters</title>
 </head>
 

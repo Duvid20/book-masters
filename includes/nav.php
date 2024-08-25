@@ -3,7 +3,7 @@
         BOOK MASTERS
     </div>
 
-    <div id="nav-home-btn" class="nav-item">
+    <div id="nav-home-btn" class="nav-item nav-item-selected">
         <i class="fa-solid fa-home"></i>
         <div class="nav-item-text">Home</div>
     </div>

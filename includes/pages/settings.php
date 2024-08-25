@@ -1,3 +1,4 @@
-settings
-
-dark/whitemode
+<div class="page" id="settings-page">
+    Settings
+    dark/whitemode
+</div>

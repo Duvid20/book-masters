@@ -20,8 +20,10 @@ document.addEventListener("DOMContentLoaded", function () {
     item.addEventListener("click", function () {
       navItems.forEach((item) => {
         item.classList.remove("active");
+        item.classList.remove("nav-item-selected");
       });
       this.classList.add("active");
+      item.classList.add("nav-item-selected");
 
       // load corresponding content
       const page = this.id.replace("nav-", "").replace("-btn", "");

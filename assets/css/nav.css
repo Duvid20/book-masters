@@ -44,3 +44,16 @@
   flex-direction: row;
   gap: 10px;
 }
+
+.nav-item:active {
+  opacity: 0.8;
+}
+
+.nav-item:hover {
+  opacity: 0.65;
+  cursor: pointer;
+}
+
+.nav-item-selected {
+  opacity: 0.5;
+}
