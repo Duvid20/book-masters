@@ -1,6 +1,7 @@
 <?php
 
 $_SESSION["to_login"] = false;
+$_SESSION["register_failed"] = false;
 
 $usernameOrEmail = "";
 if (isset($_SESSION["username"]) && $_SESSION["username"] != "") {
@@ -11,7 +12,7 @@ if (isset($_SESSION["username"]) && $_SESSION["username"] != "") {
 
 if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
     $usernameOrEmail = sanitizeValue($_POST["usernameOrEmail"]);
-    $password = sanitizeValue($_POST["password"]);
+    $plainPassword = sanitizeValue($_POST["password"]);
 
     $matchWithEmail = false;
 
@@ -32,37 +33,46 @@ if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
         $hashedPassword = $matchWithEmail ? $result[0]["password"] : null;
     }
 
-    // verify password
-    if (($matchWithUsername || $matchWithEmail) && password_verify($password, $hashedPassword)) {
-        $_SESSION["logged_in"] = true;
-        $_SESSION["user_id"] = $result[0]["id"];
-    } else if ($matchWithUsername || $matchWithEmail) {
-        echo "Invalid username or email: ", $usernameOrEmail, "<br>";
-        // $_SESSION["wrong_credentials"] = true;
-    } else if (password_verify($password, $hashedPassword)) {
-        echo "Invalid password.", $password;
-        // $_SESSION["wrong_credentials"] = true;
+    $passwordsMatch = password_verify($plainPassword, $hashedPassword);
+    // $passwordsMatch = true;
+
+    if ($passwordsMatch) {
+        echo "passwords match";
     } else {
-        echo "Other login error";
-        // $_SESSION["wrong_credentials"] = true;
+        echo "passwords do not match";
     }
 
-    // $_SESSION["matchWithUsername"] = $matchWithUsername;
-    // $_SESSION["matchWithEmail"] = $matchWithEmail;
-    // $_SESSION["hashedPassword"] = $hashedPassword;
-    // $_SESSION["password"] = $password;
-    // $_SESSION["usernameOrEmail"] = $usernameOrEmail;
-    // $_SESSION["result"] = $result;
+    // verify password
+    if (($matchWithUsername || $matchWithEmail) && $passwordsMatch) {
+        $_SESSION["logged_in"] = true;
+        $_SESSION["user_id"] = $result[0]["id"];
+    } else {
+        echo "Invalid username or email: ", $usernameOrEmail, "<br>";
+        $_SESSION["login_failed"] = true;
+    }
 
-    var_dump($_SESSION);
-    // reloadPage();
+    // Debugging output
+    echo '<pre>';
+    echo 'Username or Email: ', $usernameOrEmail, "\n";
+    echo 'Plain password: ', $plainPassword, "\n";
+    echo 'Match with Username: ', $matchWithUsername ? 'true' : 'false', "\n";
+    echo 'Match with Email: ', $matchWithEmail ? 'true' : 'false', "\n";
+    echo 'Hashed Password: ', $hashedPassword, "\n";
+    echo 'Result: ', print_r($result, true), "\n";
+    echo 'Session: ', print_r($_SESSION, true), "\n";
+    echo '</pre>';
+
+    // TEST
+    // $_SESSION["logged_in"] = true;
+
+    reloadPage();
+    exit();
 }
-?>
 
+?>
 <div class="auth-page-container">
     <div class="auth-header">Login</div>
-    <div class="auth-sub-header">Enter your credencials</div>
-
+    <div class="auth-sub-header">Enter your credentials</div>
     <form class="auth-form" id="login-form" action="/" method="POST">
         <div class="user-input-area user-input-area-login" id="login-username-email-password">
             <input
@@ -84,7 +94,6 @@ if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
                 placeholder="Password"
                 maxlength="20">
         </div>
-
         <input
             class="auth-item auth-btn button-register auth-item-medium"
             id="login-btn"
@@ -92,12 +101,10 @@ if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
             value="Log in"
             disabled>
     </form>
-
     <div class="account-message">
         New to Book Masters? <span class="to-auth-page-btn" id="to-register-btn">Register here</span>
     </div>
 </div>
-
 <script src="assets/js/auth.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {

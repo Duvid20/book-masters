@@ -520,7 +520,7 @@ function showPreviousRegisterStep() {
     }
 
     // change sub header text
-    registerSubHeader.innerHTML = subHeaderTexts[currentRegisterStep];
+    registerSubHeader.innerHTML = registerSubHeaderTexts[currentRegisterStep];
   }
 }
 

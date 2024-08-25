@@ -19,8 +19,6 @@ if (
     isset($_POST['given-name']) &&
     isset($_POST['family-name'])
 ) {
-    // var_dump($_POST);
-
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -31,31 +29,30 @@ if (
     $isEmailInUse = isEmailInUse($email);
 
     if (!$isUsernameInUse && !$isEmailInUse) {
-        $password = password_hash($password, PASSWORD_BCRYPT);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         $sql = "INSERT INTO _users (given_name, family_name, username, password) VALUES (?, ?, ?, ?)";
-        $result = executeSQL($sql, [$givenName, $familyName, $username, $password]);
+        $result = executeSQL($sql, [$givenName, $familyName, $username, $hashedPassword]);
 
         $sql = "SELECT id FROM _users WHERE username = ?";
         $result = executeSQL($sql, [$username]);
         $id = $result[0]['id'];
 
         $sql = "INSERT INTO _emails (email, f_id_user) VALUES (?, ?)";
-        $result = executeSQL($sql, [$email, $id]);
+        $success = executeSQL($sql, [$email, $id]);
 
-        $_SESSION['username'] = $username;
-        $_SESSION['email'] = $email;
-        $_SESSION['to_login'] = true;
+        if ($success) {
+            $_SESSION['username'] = $username;
+            $_SESSION['email'] = $email;
+            $_SESSION['to_login'] = true;
+            $_SESSION['register_failed'] = false;
+        } else {
+            $_SESSION['register_failed'] = true;
+        }
 
-        redirect('index.php');
+        reloadPage();
         exit();
     }
-
-    // todo:
-    // when prefilling username or email, prefer the one that already exists
-    // trigger continue button on enter-key press
-    // only allow continue buttons triggering with keyboard keys if button is active
-    // error handling of sql queries: error page with error message
 }
 
 ?>
@@ -68,7 +65,8 @@ if (
             <input
                 class="text-input auth-item auth-item-medium"
                 id="register-username-input"
-                type="text" name="username"
+                type="text"
+                name="username"
                 placeholder="Username"
                 maxlength="16"
                 autocomplete="username"
@@ -124,8 +122,8 @@ if (
             <input
                 class="text-input auth-item auth-item-medium"
                 id="register-password-input"
-                type="password" n
-                ame="password"
+                type="password"
+                name="password"
                 placeholder="Password"
                 maxlength="20">
             <input

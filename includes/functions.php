@@ -23,5 +23,10 @@ function isCsrfTokenValid()
 
 function reloadPage()
 {
-    echo "<script>reloadPage()</script>";
+    echo "<script>location.reload();</script>";
+}
+
+function checkIfSessionVariableTrue($variable)
+{
+    return isset($_SESSION[$variable]) && $_SESSION[$variable] == true;
 }
