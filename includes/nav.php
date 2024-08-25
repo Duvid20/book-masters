@@ -23,4 +23,8 @@
         <i class="fa-solid fa-newspaper"></i>
         <div class="nav-item-text">News</div>
     </div>
+    <div id="nav-settings-btn" class="nav-item">
+        <i class="fa-solid fa-cog"></i>
+        <div class="nav-item-text">Settings</div>
+    </div>
 </div>

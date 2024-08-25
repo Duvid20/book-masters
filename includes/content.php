@@ -3,6 +3,8 @@
 
     if (checkIfSessionVariableTrue("logged_in")) {
         echo "<script>alert('Logged in.')</script>";
+
+        echo "<script src='assets/js/content.js'></script>";
         require_once 'includes/pages/home.php';
     } else if (checkIfSessionVariableTrue("to_login")) {
         echo "<script>alert('To login.')</script>";
@@ -20,6 +22,6 @@
         echo "<script>alert('Default redirect to register.')</script>";
         require_once 'includes/auth/register.php';
     }
-    
+
     ?>
 </div>

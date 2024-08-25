@@ -1,0 +1,3 @@
+settings
+
+dark/whitemode
