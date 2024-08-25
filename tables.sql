@@ -83,16 +83,16 @@ CREATE TABLE `_emails` (
   FOREIGN KEY (`f_id_user`) REFERENCES `_users`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-CREATE TABLE `_friends` (
+CREATE TABLE `_follows` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `f_id_user1` int(10) UNSIGNED NOT NULL,
-  `f_id_user2` int(10) UNSIGNED NOT NULL,
+  `f_id_user_followed` int(10) UNSIGNED NOT NULL,
+  `f_id_user_follower` int(10) UNSIGNED NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  INDEX (`f_id_user1`),
-  INDEX (`f_id_user2`),
-  FOREIGN KEY (`f_id_user1`) REFERENCES `_users`(`id`),
-  FOREIGN KEY (`f_id_user2`) REFERENCES `_users`(`id`)
+  INDEX (`f_id_user_followed`),
+  INDEX (`f_id_user_follower`),
+  FOREIGN KEY (`f_id_user_followed`) REFERENCES `_users`(`id`),
+  FOREIGN KEY (`f_id_user_follower`) REFERENCES `_users`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `_questions` (

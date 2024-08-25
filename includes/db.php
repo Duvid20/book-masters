@@ -101,3 +101,35 @@ function getPoints($id)
     $result = executeSQL($sql, [$id]);
     return $result[0]['points'];
 }
+
+function getFollowersCount($id)
+{
+    $sql = "SELECT COUNT(*)
+        AS followers
+        FROM _follows
+        WHERE f_id_user_followed = ?";
+    $result = executeSQL($sql, [$id]);
+    return $result[0]['followers'];
+}
+
+function getFollowingCount($id)
+{
+    $sql = "SELECT COUNT(*)
+        AS following
+        FROM _follows
+        WHERE f_id_user_follower = ?";
+    $result = executeSQL($sql, [$id]);
+    return $result[0]['following'];
+}
+
+function getFollowers($id)
+{
+    $sql = "SELECT username
+        FROM _users
+        WHERE id
+        IN (SELECT f_id_user_follower
+            FROM _follows
+            WHERE f_id_user_followed = ?)";
+    $result = executeSQL($sql, [$id]);
+    return $result;
+}

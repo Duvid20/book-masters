@@ -7,6 +7,10 @@ $id = $_SESSION["id"];
 $username = $_SESSION["username"];
 $joinedDate = (new DateTime($_SESSION["created_at"]))->format('F Y');
 $points = getPoints($id);
+$followersCount = getFollowersCount($id);
+$followingCount = getFollowingCount($id);
+
+$followers = getFollowers($id);
 
 ?>
 
@@ -21,6 +25,19 @@ $points = getPoints($id);
         <div>
             <div><?php echo $points ?> points</div>
         </div>
+        <div>
+            <?php echo $followersCount ?> followers
+        </div>
+        <div>Following <?php echo $followingCount ?></div>
     </div>
+
+    <div>Followers</div>
+    <pre>
+        <?php
+        foreach ($followers as $follower) {
+            echo $follower["username"] . "\n";
+        }
+        ?>
+    </pre>
 
 </div>
