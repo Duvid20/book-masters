@@ -18,9 +18,9 @@ if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
 
     // check if user exists by username
     $sql = "SELECT id, password FROM _users WHERE username = ?";
-    $result = executeSQL($sql, [$usernameOrEmail]);
-    $matchWithUsername = isset($result[0]["id"]);
-    $hashedPassword = $matchWithUsername ? $result[0]["password"] : null;
+    $result = executeSQL($sql, [$usernameOrEmail])[0];
+    $matchWithUsername = isset($result["id"]);
+    $hashedPassword = $matchWithUsername ? $result["password"] : null;
 
     // check if user exists by email
     if (!$matchWithUsername) {
@@ -28,19 +28,33 @@ if (isset($_POST["usernameOrEmail"]) && isset($_POST["password"])) {
                 FROM _users 
                 INNER JOIN _emails ON _users.id = _emails.f_id_user
                 WHERE _emails.email = ? AND _emails.is_verified = 1";
-        $result = executeSQL($sql, [$usernameOrEmail]);
-        $matchWithEmail = isset($result[0]["id"]);
-        $hashedPassword = $matchWithEmail ? $result[0]["password"] : null;
+        $result = executeSQL($sql, [$usernameOrEmail])[0];
+        $matchWithEmail = isset($result["id"]);
+        $hashedPassword = $matchWithEmail ? $result["password"] : null;
     }
 
     $passwordsMatch = password_verify($plainPassword, $hashedPassword);
 
     // if user exists and passwords match, log in user
     if (($matchWithUsername || $matchWithEmail) && $passwordsMatch) {
+        $id = $result["id"];
         $_SESSION["logged_in"] = true;
-        $_SESSION["user_id"] = $result[0]["id"];
+        $_SESSION["login_failed"] = false;
+
+        // save user data into session
+        $sql = "SELECT given_name, family_name, username, is_admin, is_bookinator, points, created_at FROM _users WHERE id = ?";
+        $result = executeSQL($sql, [$id])[0];
+
+        $_SESSION["id"] = $id;
+        $_SESSION["given_name"] = $result["given_name"];
+        $_SESSION["family_name"] = $result["family_name"];
+        $_SESSION["username"] = $result["username"];
+        $_SESSION["is_admin"] = $result["is_admin"];
+        $_SESSION["is_bookinator"] = $result["is_bookinator"];
+        $_SESSION["created_at"] = $result["created_at"];
     } else {
         $_SESSION["login_failed"] = true;
+        $_SESSION["logged_in"] = false;
     }
 
     reloadPage();

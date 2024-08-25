@@ -3,7 +3,6 @@
 
     if (checkIfSessionVariableTrue("logged_in")) {
         echo "<script>alert('Logged in.')</script>";
-
         echo "<script src='assets/js/page.js'></script>";
         require_once 'includes/pages/home.php';
     } else if (checkIfSessionVariableTrue("to_login")) {

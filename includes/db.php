@@ -94,3 +94,10 @@ function isEmailInUse($email)
 {
     return checkIfExistsInTable('_emails', 'email', $email);
 }
+
+function getPoints($id)
+{
+    $sql = "SELECT points FROM _users WHERE id = ?";
+    $result = executeSQL($sql, [$id]);
+    return $result[0]['points'];
+}
