@@ -1,5 +1,6 @@
 <?php
 require_once '../db.php';
+require_once '../functions.php';
 
 if (isset($_POST['username'])) {
     $username = $_POST['username'];
